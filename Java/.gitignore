@@ -1,0 +1,10 @@
+# Build results
+[Tt]arget/
+
+# Classes
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
