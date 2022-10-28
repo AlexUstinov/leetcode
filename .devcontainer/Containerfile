@@ -111,6 +111,10 @@ ARG USER_GID=$USER_UID
 RUN bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" "true" "true" \
     && bash /tmp/library-scripts/java-debian.sh "none" "${SDKMAN_DIR}" "${USERNAME}" "true" \
     && bash /tmp/library-scripts/maven-debian.sh "latest" "${SDKMAN_DIR}" ${USERNAME} "true" \
-	&& apt-get clean -y && rm -rf /var/lib/apt/lists/*
-    # Remove library scripts for final image
-RUN rm -rf /tmp/library-scripts
+    # Install Rust
+    && export DEBIAN_FRONTEND=noninteractive \
+    # Remove imagemagick due to https://security-tracker.debian.org/tracker/CVE-2019-10131
+    && apt-get purge -y imagemagick imagemagick-6-common \
+    && bash /tmp/library-scripts/rust-debian.sh "${CARGO_HOME}" "${RUSTUP_HOME}" "${USERNAME}" "true" "true" \
+    && apt-get clean -y \
+    && rm -rf /var/lib/apt/lists/* /tmp/library-scripts
