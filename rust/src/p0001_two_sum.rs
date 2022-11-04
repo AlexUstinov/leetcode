@@ -1,8 +1,19 @@
+use std::collections::HashMap;
 struct Solution;
 
 impl Solution {
     pub fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
-        vec![]
+        let mut num_indexes = HashMap::new();
+        for (sys_index, num) in nums.iter().enumerate() {
+            let index = sys_index as i32;
+            let compliment = target - num;
+            let probe_result = num_indexes.get(&compliment);
+            if probe_result.is_some() {
+                return vec![*probe_result.unwrap(), index];
+            }
+            num_indexes.insert(num, index);
+        }
+        panic!("No solution found");
     }
 }
 
