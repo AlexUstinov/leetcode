@@ -18,10 +18,9 @@ public class P0002_AddTwoNumbers
         public ListNode? AddTwoNumbers(ListNode? num1, ListNode? num2)
         {
             static ListNode? AddNumbers(ListNode? num1, ListNode? num2, int carry) => (num1, num2) switch {
-                (num1: null, num2: null) => carry > 0 ? new ListNode(carry) : null,
                 (num1: not null, num2: not null) when num1.val + num2.val + carry is var sum => new ListNode(sum % 10, AddNumbers(num1.next, num2.next, sum / 10)),
-                (num1: _, num2: _) when (num1 ?? num2) is var num && num is not null && num.val + carry is var sum => new ListNode(sum % 10, AddNumbers(num.next, null, sum / 10)),
-                _ => throw new InvalidOperationException("The state is unreachable.")
+                _ when (num1 ?? num2) is var num && num is not null && num.val + carry is var sum => new ListNode(sum % 10, AddNumbers(num.next, null, sum / 10)),
+                _ => carry > 0 ? new ListNode(carry) : null
             };
 
             return AddNumbers(num1, num2, 0);
