@@ -1,4 +1,7 @@
+#![allow(dead_code)]
+
 use std::collections::HashMap;
+
 struct Solution;
 
 impl Solution {
