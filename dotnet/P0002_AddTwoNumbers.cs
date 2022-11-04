@@ -17,20 +17,15 @@ public class P0002_AddTwoNumbers
     {
         public ListNode AddTwoNumbers(ListNode? num1, ListNode? num2)
         {
-            ListNode head = new ListNode(), tail = head;
-            ListNode? prevTail = null;
-            while (num1!=null || num2!=null) {
-                var sum = (num1?.val ?? 0) + (num2?.val ?? 0) + tail.val;
-                tail.val = sum % 10;
-                prevTail = tail;
-                tail = tail.next = new ListNode(sum > 9 ? 1 : 0);
-                num1 = num1?.next;
-                num2 = num2?.next;
+            static ListNode? AddNumbers(ListNode? num1, ListNode? num2, int carryOver) {
+                if (num1 is null && num2 is null) {
+                    return carryOver > 0 ? new ListNode(carryOver) : null;
+                }
+                var sum = (num1?.val ?? 0) + (num2?.val ?? 0) + carryOver;
+                return new ListNode(sum % 10, AddNumbers(num1?.next, num2?.next, sum > 9 ? 1 : 0));
             }
-            if (prevTail is not null && tail.val==0) {
-                prevTail.next = null;
-            }
-            return head ?? new ListNode();
+            
+            return AddNumbers(num1, num2, 0) ?? new ListNode();
         }
     }
 
