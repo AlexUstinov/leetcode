@@ -5,6 +5,9 @@ root = true
 [*]
 charset = utf-8
 max_line_length = 120
+# New line preferences
+end_of_line = lf
+insert_final_newline = true
 
 # Markdown Files
 [*.md]
@@ -33,10 +36,6 @@ tab_width = 4
 indent_size = 4
 indent_style = space
 tab_width = 4
-
-# New line preferences
-end_of_line = crlf
-insert_final_newline = true
 
 #### .NET Coding Conventions ####
 # https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-language-conventions?view=vs-2019#net-code-style-settings
