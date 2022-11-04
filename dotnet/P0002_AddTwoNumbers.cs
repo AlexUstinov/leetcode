@@ -15,25 +15,20 @@ public class P0002_AddTwoNumbers
 
     private class Solution
     {
-        public ListNode AddTwoNumbers(ListNode l1, ListNode l2)
+        public ListNode AddTwoNumbers(ListNode? num1, ListNode? num2)
         {
-            var carryOver = 0;
-            ListNode? num1 = l1, num2 = l2, head = null, tail = null;
+            ListNode head = new ListNode(), tail = head;
+            ListNode? prevTail = null;
             while (num1!=null || num2!=null) {
-                var sum = (num1?.val ?? 0) + (num2?.val ?? 0) + carryOver;
-                carryOver = sum > 9 ? 1 : 0;
-                var node = new ListNode(sum % 10);
-                if (tail==null) {
-                    head = tail = node;
-                }
-                else {
-                    tail = tail.next = node;
-                }
+                var sum = (num1?.val ?? 0) + (num2?.val ?? 0) + tail.val;
+                tail.val = sum % 10;
+                prevTail = tail;
+                tail = tail.next = new ListNode(sum > 9 ? 1 : 0);
                 num1 = num1?.next;
                 num2 = num2?.next;
             }
-            if (tail!=null && carryOver > 0) {
-                tail.next = new ListNode(carryOver);
+            if (prevTail is not null && tail.val==0) {
+                prevTail.next = null;
             }
             return head ?? new ListNode();
         }
