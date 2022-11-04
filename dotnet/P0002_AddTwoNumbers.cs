@@ -15,7 +15,7 @@ public class P0002_AddTwoNumbers
 
     private class Solution
     {
-        public ListNode AddTwoNumbers(ListNode? num1, ListNode? num2)
+        public ListNode? AddTwoNumbers(ListNode? num1, ListNode? num2)
         {
             static ListNode? AddNumbers(ListNode? num1, ListNode? num2, int carryOver) {
                 if (num1 is null && num2 is null) {
@@ -25,7 +25,7 @@ public class P0002_AddTwoNumbers
                 return new ListNode(sum % 10, AddNumbers(num1?.next, num2?.next, sum > 9 ? 1 : 0));
             }
             
-            return AddNumbers(num1, num2, 0) ?? new ListNode();
+            return AddNumbers(num1, num2, 0);
         }
     }
 
