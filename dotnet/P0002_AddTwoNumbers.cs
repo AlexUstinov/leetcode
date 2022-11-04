@@ -17,21 +17,21 @@ public class P0002_AddTwoNumbers
     {
         public ListNode? AddTwoNumbers(ListNode? num1, ListNode? num2)
         {
-            static ListNode? AddNumbers(ListNode? num1, ListNode? num2, int carryOver) {
-                if (num1 is null && num2 is null) {
-                    return carryOver > 0 ? new ListNode(carryOver) : null;
-                }
-                var sum = (num1?.val ?? 0) + (num2?.val ?? 0) + carryOver;
-                return new ListNode(sum % 10, AddNumbers(num1?.next, num2?.next, sum > 9 ? 1 : 0));
-            }
-            
+            static ListNode? AddNumbers(ListNode? num1, ListNode? num2, int carry) => (num1, num2) switch {
+                (num1: null, num2: null) => carry > 0 ? new ListNode(carry) : null,
+                (num1: null, num2: not null) when num2.val + carry is var sum => new ListNode(sum % 10, AddNumbers(null, num2.next, sum / 10)),
+                (num1: not null, num2: null) when num1.val + carry is var sum => new ListNode(sum % 10, AddNumbers(num1.next, null, sum / 10)),
+                (num1: not null, num2: not null) when num1.val + num2.val + carry is var sum => new ListNode(sum % 10, AddNumbers(num1.next, num2.next, sum / 10)),
+                _ => throw new InvalidOperationException("The state is unreachable.")
+            };
+
             return AddNumbers(num1, num2, 0);
         }
     }
 
     private static IEnumerable<object[]> GetTestCases()
     {
-        return new [] {
+        return new[] {
             new object[] {1, 2, 3},
             new object[] {1, 20 , 21},
             new object[] {1, 999, 1000}
