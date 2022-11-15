@@ -5,11 +5,9 @@ struct Solution;
 impl Solution {
     #[allow(dead_code)]
     pub fn find_median_sorted_arrays(nums1: Vec<i32>, nums2: Vec<i32>) -> f64 {
-        let (len1, len2) = (nums1.len(), nums2.len());
-        let (nums1, len1, nums2, len2) = if len1 > len2 {
-            (nums2, len2, nums1, len1)
-        } else {
-            (nums1, len1, nums2, len2)
+        let (nums1, len1, nums2, len2) = match (nums1.len(), nums2.len()) {
+            (len1, len2) if len1 > len2 => (nums2, len2, nums1, len1),
+            (len1, len2) => (nums1, len1, nums2, len2)
         };
         let len = len1 + len2;
         let half_len = len >> 1;
