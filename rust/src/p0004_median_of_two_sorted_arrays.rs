@@ -13,7 +13,7 @@ impl Solution {
         };
         let len = len1 + len2;
         let half_len = len >> 1;
-        let (mut low, mut high) = (0usize, len1 + 1);
+        let (mut low, mut high) = (0usize, len1);
 
         loop {
             let cut1 = (low + high) >> 1;
@@ -22,10 +22,10 @@ impl Solution {
             let (ul, ur) = (match cut1 { 0 => i32::MIN, _ => nums1[cut1-1]}, match cut1 { index if index < len1 => nums1[cut1], _ => i32::MAX });
             let (bl, br) = (match cut2 { 0 => i32::MIN, _ => nums2[cut2-1]}, match cut2 { index if index < len2 => nums2[cut2], _ => i32::MAX });
             if ul > br {
-                high = cut1;
+                high = cut1 - 1; // We've already seen the (cut1-1)'th element (the value of ul), so excluding it
             }
             else if bl > ur {
-                low = cut1;
+                low = cut1 + 1;  // We've already seen the cut1'th element (the value of ur), so excluding it
             }
             else {
                 break if (len & 1) > 0 { cmp::min(ur, br) as f64 } else { (cmp::max(ul, bl) + cmp::min(ur, br)) as f64 / 2f64 };
