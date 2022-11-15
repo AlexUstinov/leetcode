@@ -10,13 +10,12 @@ impl Solution {
         for (sys_index, num) in nums.iter().enumerate() {
             let index = sys_index as i32;
             let compliment = target - num;
-            let probe_result = num_indexes.get(&compliment);
-            if probe_result.is_some() {
-                return vec![*probe_result.unwrap(), index];
+            if let Some(result) = num_indexes.get(&compliment) {
+                return vec![*result, index];
             }
             num_indexes.insert(num, index);
         }
-        panic!("No solution found");
+        panic!("No solution found"); 
     }
 }
 
