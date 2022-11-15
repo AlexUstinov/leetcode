@@ -26,7 +26,10 @@ impl Solution {
                 low = cut1 + 1;  // We've already seen the cut1'th element (the value of ur), so excluding it
             }
             else {
-                break if (len & 1) > 0 { cmp::min(ur, br) as f64 } else { (cmp::max(ul, bl) + cmp::min(ur, br)) as f64 / 2f64 };
+                break match len {
+                    len if (len & 1) > 0 => cmp::min(ur, br) as f64,
+                    _ => (cmp::max(ul, bl) + cmp::min(ur, br)) as f64 / 2f64
+                };
             }
         }
     }
