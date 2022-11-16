@@ -1,7 +1,7 @@
 struct Solution;
 
 impl Solution {
-    fn expand(s_bytes: &[u8], mut l: usize, mut r: usize) -> Option<String> {
+    fn expand(s_bytes: &[u8], mut l: usize, mut r: usize) -> Option<&[u8]> {
         if r >= s_bytes.len() || s_bytes[l] != s_bytes[r] {
             return None;
         }
@@ -12,17 +12,14 @@ impl Solution {
                     continue;
                 }
             }
-            break match String::from_utf8(s_bytes[l..(r + 1)].to_vec()) {
-                Ok(result) => Some(result),
-                Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
-            };
+            break Some(&s_bytes[l..(r + 1)]);
         }
     }
 
     pub fn longest_palindrome(s: String) -> String {
         let s_bytes = s.as_bytes();
         let mut center = 0usize;
-        let mut max_palindrome = String::from("");
+        let mut max_palindrome: &[u8] = &[];
         while center < s_bytes.len() {
             if let Some(max_candidate) = Solution::expand(s_bytes, center, center) {
                 if max_palindrome.len() < max_candidate.len() {
@@ -36,7 +33,10 @@ impl Solution {
             }
             center += 1;
         }
-        max_palindrome
+        match std::str::from_utf8(max_palindrome) {
+            Ok(result) => String::from(result),
+            Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
+        }
     }
 }
 
