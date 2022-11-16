@@ -22,6 +22,9 @@
 			},
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
+				"donjayamanne.githistory",
+				"eamodio.gitlens",
+				"mhutchie.git-graph",
 				"ms-dotnettools.csharp",
 				"vscjava.vscode-java-pack",
 				"vadimcn.vscode-lldb",
