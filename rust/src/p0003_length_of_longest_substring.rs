@@ -1,10 +1,8 @@
 use std::cmp;
 use std::collections::HashMap;
 
-#[allow(dead_code)]
-struct Solution;
+pub struct Solution;
 impl Solution {
-    #[allow(dead_code)]
     pub fn length_of_longest_substring(s: String) -> i32 {
         let input = s.as_bytes();
         let mut chars = [0; 128];

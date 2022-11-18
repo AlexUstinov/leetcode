@@ -1,6 +1,5 @@
 use std::cmp;
-#[allow(dead_code)]
-struct Solution;
+pub struct Solution;
 
 impl Solution {
     #[allow(dead_code)]
