@@ -24,9 +24,9 @@ impl<'a> ZigZagIterable for &'a str {
             num_rows,
             row: -1,
             idx: usize::MAX,
-            next_el: None
+            next_el: None,
         }
-    }    
+    }
 }
 
 struct ZigZagIterator<'a> {
@@ -34,7 +34,7 @@ struct ZigZagIterator<'a> {
     num_rows: i32,
     row: i32,
     idx: usize,
-    next_el: Option<u8>
+    next_el: Option<u8>,
 }
 
 impl<'a> Iterator for ZigZagIterator<'a> {
@@ -44,41 +44,26 @@ impl<'a> Iterator for ZigZagIterator<'a> {
             Some(el) => {
                 self.next_el = None;
                 Some(el)
-            },
+            }
             None => {
                 let len = self.bytes.len();
-                if self.idx >= len {
+                if self.row < 0 || self.idx >= len + (self.row as usize) {
                     self.row += 1;
                     self.idx = 0;
                     if self.row == self.num_rows {
                         return None;
                     }
                 }
-                if self.row==0 {
-                    let el = self.bytes[self.idx];
-                    self.idx += (2*self.num_rows - 2) as usize;
-                    Some(el)
-                }
-                else if self.row == self.num_rows - 1 {
-                    let el_idx = self.idx + (self.row as usize);
-                    let el = if el_idx < len { Some(self.bytes[el_idx]) } else { None };
-                    self.idx += (2*self.num_rows - 2) as usize;
-                    el
-                }
-                else {
-                    let idx1 = self.idx.checked_sub(self.row as usize);
-                    let idx2 = self.idx + (self.row as usize);
-                    self.idx += (2*self.num_rows - 2) as usize;
-                    match idx1 {
-                        Some(idx1) => {
-                            if idx2 < len {
-                                self.next_el = Some(self.bytes[idx2]);
-                            }
-                            Some(self.bytes[idx1])
-                        },
-                        None => {
-                            Some(self.bytes[idx2])
-                        }
+                let idx1 = self.idx.checked_sub(self.row as usize);
+                let idx2 = self.idx + (self.row as usize);
+                self.idx += if self.num_rows > 1 { (2 * self.num_rows - 2) as usize } else { 1 };
+                match idx1 {
+                    Some(idx1) if self.row < self.num_rows - 1 => {
+                        self.next_el = if idx1 != idx2 && idx2 < len { Some(self.bytes[idx2]) } else { None };
+                        Some(self.bytes[idx1])
+                    }
+                    _ => {
+                        if idx2 < len { Some(self.bytes[idx2]) } else { None }
                     }
                 }
             }
@@ -88,11 +73,16 @@ impl<'a> Iterator for ZigZagIterator<'a> {
 
 #[cfg(test)]
 mod test {
-    use test_case::test_case;
     use super::Solution;
+    use test_case::test_case;
 
+    #[test_case(String::from("PAYPALISHIRING"), 1, "PAYPALISHIRING")]
+    #[test_case(String::from("PAYPALISHIRING"), 2, "PYAIHRNAPLSIIG")]
     #[test_case(String::from("PAYPALISHIRING"), 3, "PAHNAPLSIIGYIR")]
     #[test_case(String::from("PAYPALISHIRING"), 4, "PINALSIGYAHRPI")]
+    #[test_case(String::from("PAYPALISHIRING"), 13, "PAYPALISHIRIGN")]
+    #[test_case(String::from("PAYPALISHIRING"), 14, "PAYPALISHIRING")]
+    #[test_case(String::from("PAYPALISHIRING"), 1000, "PAYPALISHIRING")]
     fn solve(s: String, num_rows: i32, expected: &str) {
         assert_eq!(expected, Solution::convert(s, num_rows));
     }
