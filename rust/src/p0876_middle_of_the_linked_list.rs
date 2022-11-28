@@ -1,16 +1,4 @@
-#[derive(PartialEq, Eq, Clone, Debug)]
-pub struct ListNode {
-    pub val: i32,
-    pub next: Option<Box<ListNode>>,
-}
-
-impl ListNode {
-    #[inline]
-    fn new(val: i32) -> Self {
-        ListNode { next: None, val }
-    }
-}
-
+use crate::linked_list::ListNode;
 pub struct Solution;
 
 impl Solution {
@@ -22,6 +10,24 @@ impl Solution {
         }
         slow.clone()
     }
+
+    pub fn middle_node_counter(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        let mut head = head;
+        let mut count = 0;
+        let mut pointer = &head;
+        while let Some(node) = pointer {
+            pointer = &node.next;
+            count += 1;
+        }
+        count >>= 1;
+        while count > 0 {
+            if let Some(node) = head {
+                head = node.next;
+            }
+            count -= 1;
+        }
+        head
+    }
 }
 
 #[cfg(test)]
@@ -31,22 +37,12 @@ mod test {
 
     #[test_case(1, 1)]
     #[test_case(12, 2)]
-    #[test_case(1234, 3)]
-    #[test_case(12345, 3)]
+    #[test_case(1234, 34)]
+    #[test_case(12345, 345)]
     fn solve(num: i32, expected: i32) {
-        let l = convert_to_linked_list(num);
-        assert_eq!(expected, Solution::middle_node(l).unwrap().val);
-    }
-
-    fn convert_to_linked_list(mut num: i32) -> Option<Box<ListNode>> {
-        let mut head = Box::new(ListNode::new(0));
-        while num > 0 {
-            head.next = Some(Box::new(ListNode {
-                val: num % 10,
-                next: head.next,
-            }));
-            num /= 10;
-        }
-        head.next
+        let l = ListNode::from_num(num);
+        assert_eq!(expected, ListNode::to_num(&Solution::middle_node(l)));
+        let l = ListNode::from_num(num);
+        assert_eq!(expected, ListNode::to_num(&Solution::middle_node_counter(l)));
     }
 }
