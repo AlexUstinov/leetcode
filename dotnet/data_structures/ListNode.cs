@@ -14,17 +14,24 @@ public class ListNode
         return FromNumbers(values
             .Trim(' ', '[', ']')
             .Split(',')
-            .Select(token => Int32.Parse(token.Trim())));
+            .Select(token => Int32.TryParse(token.Trim(), out var num) ? num : default(int?)));
     }
 
     public static ListNode? FromNumbers(IEnumerable<int> numbers)
     {
+        return FromNumbers(numbers.Select(n => (int?)n));
+    }
+
+    public static ListNode? FromNumbers(IEnumerable<int?> numbers)
+    {
         return numbers
-            .Aggregate<int, (ListNode? head, ListNode? tail)>((null, null), (list, val) => {
-                list.tail = list.tail switch {
-                    null => list.head = new ListNode(val),
-                    _ => list.tail.next = new ListNode(val)
-                };
+            .Aggregate<int?, (ListNode? head, ListNode? tail)>((null, null), (list, val) => {
+                if (val.HasValue) {
+                    list.tail = list.tail switch {
+                        null => list.head = new ListNode(val.Value),
+                        _ => list.tail.next = new ListNode(val.Value)
+                    };
+                }
                 return list;
             }).head;
     }
