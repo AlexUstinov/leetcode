@@ -51,7 +51,7 @@ public class TreeNode
 
     public override string ToString()
     {
-        return "[" + string.Join(',', ToNumbers()) + "]";
+        return "[" + string.Join(',', ToNumbers().Select(n => n.HasValue ? n.ToString() : "null")) + "]";
     }
 
     public IEnumerable<int?> ToNumbers()
@@ -66,6 +66,7 @@ public class TreeNode
             }
             else {
                 yield return node.val;
+                valCount--;
                 if (node.left != null) {
                     valCount++;
                 }
@@ -75,8 +76,42 @@ public class TreeNode
                 queue.Enqueue(node.left);
                 queue.Enqueue(node.right);
             }
-            valCount--;
         }
     }
+}
 
+public class TreeNodeTests
+{
+    [Fact]
+    public void ToNumbersMethodWorksCorrectly_1()
+    {
+        var numbers = new[] { 10, 5, 15, 3, 7, default(int?), 18 };
+        var root = TreeNode.FromNumbers(numbers);
+        Assert.Equal(numbers, root!.ToNumbers());
+    }
+
+    [Fact]
+    public void ToNumbersMethodWorksCorrectly_2()
+    {
+        var numbers = new int?[] { 10, 5, 15, 3, 7, 18 };
+        var root = TreeNode.FromNumbers(numbers);
+        Assert.Equal(numbers, root!.ToNumbers());
+    }
+
+    [Fact]
+    public void ToNumbersMethodWorksCorrectly_3()
+    {
+        var numbers = new int?[] { 10, 5, 15, 3, 7, 18, 1, null, 6 };
+        var root = TreeNode.FromNumbers(numbers);
+        Assert.Equal(numbers, root!.ToNumbers());
+    }
+
+    [Theory]
+    [InlineData("[10,5,15,3,7,null,18]")]
+    [InlineData("[10,5,15,3,7,13,18,1,null,6]")]
+    public void ToStringMethodWorksCorrectly(string tree)
+    {
+        var root = TreeNode.FromString(tree);
+        Assert.Equal(tree, root!.ToString());
+    }
 }
