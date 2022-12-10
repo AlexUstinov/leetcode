@@ -60,10 +60,10 @@ public class TreeNode
         if (enumerator.MoveNext()) {
             numbers.Add("...");
         }
-        return "[" + string.Join(',', numbers) + "]";
+        return $"[{string.Join(',', numbers)}]";
     }
 
-    public string ToFullString() => "[" + string.Join(',', ToNumbers().Select(n => n?.ToString() ?? "null")) + "]";
+    public string ToFullString() => $"[{string.Join(',', ToNumbers().Select(n => n?.ToString() ?? "null"))}]";
 
     public IEnumerable<int?> ToNumbers()
     {
