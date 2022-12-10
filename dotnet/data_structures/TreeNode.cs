@@ -51,8 +51,19 @@ public class TreeNode
 
     public override string ToString()
     {
-        return "[" + string.Join(',', ToNumbers().Select(n => n.HasValue ? n.ToString() : "null")) + "]";
+        const int MaxCount = 15;
+        var numbers = new List<string>(MaxCount + 1);
+        var enumerator = ToNumbers().GetEnumerator();
+        while (numbers.Count < MaxCount && enumerator.MoveNext()) {
+            numbers.Add(enumerator.Current.ToString() ?? "null");
+        }
+        if (enumerator.MoveNext()) {
+            numbers.Add("...");
+        }
+        return "[" + string.Join(',', numbers) + "]";
     }
+
+    public string ToFullString() => "[" + string.Join(',', ToNumbers().Select(n => n?.ToString() ?? "null")) + "]";
 
     public IEnumerable<int?> ToNumbers()
     {
@@ -106,12 +117,30 @@ public class TreeNodeTests
         Assert.Equal(numbers, root!.ToNumbers());
     }
 
+    [Fact]
+    public void ToStringMethodDoesntTruncateTreeWithLessThan16Nodes()
+    {
+        const string tree = "[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]";
+        var root = TreeNode.FromString(tree);
+        Assert.Equal(tree, root!.ToString());
+    }
+
+    [Fact]
+    public void ToStringMethodTruncatesTreesWithOver15Nodes()
+    {
+        const string tree = "[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]";
+        const string truncatedTree = "[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,...]";
+        var root = TreeNode.FromString(tree);
+        Assert.Equal(truncatedTree, root!.ToString());
+    }
+
     [Theory]
     [InlineData("[10,5,15,3,7,null,18]")]
     [InlineData("[10,5,15,3,7,13,18,1,null,6]")]
-    public void ToStringMethodWorksCorrectly(string tree)
+    [InlineData("[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]")]
+    public void ToFullStringMethodSerializesTreeProperly(string tree)
     {
         var root = TreeNode.FromString(tree);
-        Assert.Equal(tree, root!.ToString());
+        Assert.Equal(tree, root!.ToFullString());
     }
 }
