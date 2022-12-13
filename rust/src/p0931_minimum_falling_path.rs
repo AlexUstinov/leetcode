@@ -7,15 +7,11 @@ impl Solution {
             let row_len = matrix[row_idx].len();
             for el_idx in 0..row_len {
                 let prev_row = &matrix[row_idx - 1];
-                let mut min_path = prev_row[el_idx];
-                if let Some(el_idx) = el_idx.checked_sub(1) {
-                    min_path = cmp::min(min_path, prev_row[el_idx]);
-                }
+                let mut min_path = cmp::min(prev_row[el_idx], prev_row[el_idx.saturating_sub(1)]);
                 if el_idx < row_len - 1 {
                     min_path = cmp::min(min_path, prev_row[el_idx + 1]);
                 }
-                let row = &mut matrix[row_idx];
-                row[el_idx] += min_path;
+                matrix[row_idx][el_idx] += min_path;
             }
         }
         *matrix.last().expect("Matrix must not be empty.")
