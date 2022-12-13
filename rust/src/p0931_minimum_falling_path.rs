@@ -17,17 +17,40 @@ impl Solution {
             .iter().min().expect("Row must not be empty.")
     }
 }
+pub struct IterSolution;
+
+impl IterSolution {
+    pub fn min_falling_path_sum(matrix: Vec<Vec<i32>>) -> i32 {
+        let row_len = matrix[0].len();
+        *matrix.into_iter().reduce(|prev_row, mut row| {
+            for (el_idx, el) in row.iter_mut().enumerate() {
+                let (left_idx, right_idx) = (el_idx.saturating_sub(1), el_idx.add(1).min(row_len - 1));
+                *el += prev_row[el_idx].min(prev_row[left_idx]).min(prev_row[right_idx]);
+            }
+            row
+        })
+        .expect("Matrix must not be empty.")
+            .iter().min().expect("Row must not be empty.")
+    }
+}
 
 #[cfg(test)]
 mod tests {
     use test_case::test_case;
-    use super::Solution;
+    use super::*;
 
     #[test_case("[[2,1,3],[6,5,4],[7,8,9]]", 13)]
     #[test_case("[[-19,57],[-40,-5]]", -59)]
     #[test_case("[[1]]", 1)]
     fn solve(matrix: &str, expected: i32) {
         assert_eq!(expected, Solution::min_falling_path_sum(self::parse_matrix(matrix)));
+    }
+
+    #[test_case("[[2,1,3],[6,5,4],[7,8,9]]", 13)]
+    #[test_case("[[-19,57],[-40,-5]]", -59)]
+    #[test_case("[[1]]", 1)]
+    fn solve_iter(matrix: &str, expected: i32) {
+        assert_eq!(expected, IterSolution::min_falling_path_sum(self::parse_matrix(matrix)));
     }
 
     fn parse_matrix(matrix: &str) -> Vec<Vec<i32>> {
