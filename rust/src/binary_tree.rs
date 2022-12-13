@@ -1,4 +1,4 @@
-use std::{rc::Rc, cell::RefCell, collections::VecDeque};
+use std::{cell::RefCell, collections::VecDeque, rc::Rc};
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct TreeNode {
@@ -23,12 +23,12 @@ impl TreeNode {
             .trim_matches(trim_pat)
             .split(',')
             .map(|token| match token.trim() {
-                ""|"null" => None,
+                "" | "null" => None,
                 other => Some(other.parse::<i32>().unwrap())
             })
             .collect()
     }
-    
+
     pub fn from_str(values: &str) -> Option<Rc<RefCell<TreeNode>>> {
         Self::from_vec(&Self::str_to_vec(values))
     }
@@ -62,6 +62,26 @@ impl TreeNode {
         root
     }
 
+    pub fn to_str(root: &Rc<RefCell<TreeNode>>) -> String {
+        let mut result = String::new();
+        result.push('[');
+        for num in Self::to_vec(root) {
+            match num {
+                None => result.push_str("null,"),
+                Some(num) => {
+                    result.push_str(&num.to_string());
+                    result.push(',');
+                }
+            }
+        }
+        let len = result.len();
+        if len > 1 {
+            result.truncate(len - 1);
+        }
+        result.push(']');
+        result
+    }
+
     pub fn to_vec(root: &Rc<RefCell<TreeNode>>) -> Vec<Option<i32>> {
         let mut result = Vec::new();
         let mut nodes = VecDeque::new();
@@ -81,7 +101,7 @@ impl TreeNode {
                     }
                     nodes.push_back(node.left.clone());
                     nodes.push_back(node.right.clone());
-                },
+                }
                 None => result.push(None)
             }
         }
@@ -92,6 +112,7 @@ impl TreeNode {
 #[cfg(test)]
 mod tests {
     use super::TreeNode;
+    use test_case::test_case;
 
     #[test]
     fn to_vec_method_works_correctly_1()
@@ -134,14 +155,11 @@ mod tests {
     //     Assert.Equal(truncatedTree, root!.ToString());
     // }
 
-    // [Theory]
-    // [InlineData("[10,5,15,3,7,null,18]")]
-    // [InlineData("[10,5,15,3,7,13,18,1,null,6]")]
-    // [InlineData("[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]")]
-    // public void ToFullStringMethodSerializesTreeProperly(string tree)
-    // {
-    //     var root = TreeNode.FromString(tree);
-    //     Assert.Equal(tree, root!.ToFullString());
-    // }
-
+    #[test_case("[10,5,15,3,7,null,18]")]
+    #[test_case("[10,5,15,3,7,13,18,1,null,6]")]
+    #[test_case("[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]")]
+    fn to_str_method_serializes_tree_properly(tree: &str) {
+        let root = TreeNode::from_str(tree);
+        assert_eq!(tree, TreeNode::to_str(&root.unwrap()));
+    }
 }
