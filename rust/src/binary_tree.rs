@@ -68,11 +68,11 @@ impl TreeNode {
         nodes.push_back(Some(root.clone()));
         let mut val_count = 1;
         while val_count > 0 {
-            let node = nodes.pop_front().expect("Queue must not be empty.");
-            match node.as_deref() {
+            match nodes.pop_front().expect("Queue must not be empty.") {
                 Some(node) => {
-                    let node = &*node.borrow();
+                    let node = node.borrow();
                     result.push(Some(node.val));
+                    val_count -= 1;
                     if node.left.is_some() {
                         val_count += 1;
                     }
@@ -84,7 +84,6 @@ impl TreeNode {
                 },
                 None => result.push(None)
             }
-            val_count -= 1;
         }
         result
     }
