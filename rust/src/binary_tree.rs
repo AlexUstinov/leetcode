@@ -89,3 +89,60 @@ impl TreeNode {
         result
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::TreeNode;
+
+    #[test]
+    fn to_vec_method_works_correctly_1()
+    {
+        let numbers = vec![Some(10), Some(5), Some(15), Some(3), Some(7), None, Some(18)];
+        let root = TreeNode::from_vec(&numbers);
+        assert_eq!(numbers, TreeNode::to_vec(&root.unwrap()));
+    }
+
+    #[test]
+    fn to_vec_method_works_correctly_2()
+    {
+        let numbers = vec![Some(10), Some(5), Some(15), Some(3), Some(7), Some(18)];
+        let root = TreeNode::from_vec(&numbers);
+        assert_eq!(numbers, TreeNode::to_vec(&root.unwrap()));
+    }
+
+    #[test]
+    fn to_vec_method_works_correctly_3()
+    {
+        let numbers = vec![Some(10), Some(5), Some(15), Some(3), Some(7), Some(18), Some(1), None, Some(6)];
+        let root = TreeNode::from_vec(&numbers);
+        assert_eq!(numbers, TreeNode::to_vec(&root.unwrap()));
+    }
+
+    // [Fact]
+    // public void ToStringMethodDoesntTruncateTreeWithLessThan16Nodes()
+    // {
+    //     const string tree = "[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]";
+    //     var root = TreeNode.FromString(tree);
+    //     Assert.Equal(tree, root!.ToString());
+    // }
+
+    // [Fact]
+    // public void ToStringMethodTruncatesTreesWithOver15Nodes()
+    // {
+    //     const string tree = "[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]";
+    //     const string truncatedTree = "[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,...]";
+    //     var root = TreeNode.FromString(tree);
+    //     Assert.Equal(truncatedTree, root!.ToString());
+    // }
+
+    // [Theory]
+    // [InlineData("[10,5,15,3,7,null,18]")]
+    // [InlineData("[10,5,15,3,7,13,18,1,null,6]")]
+    // [InlineData("[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]")]
+    // public void ToFullStringMethodSerializesTreeProperly(string tree)
+    // {
+    //     var root = TreeNode.FromString(tree);
+    //     Assert.Equal(tree, root!.ToFullString());
+    // }
+
+}
