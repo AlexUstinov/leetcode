@@ -1,16 +1,15 @@
+use std::ops::Add;
+
 pub struct Solution;
 
-use std::cmp;
 impl Solution {
     pub fn min_falling_path_sum(mut matrix: Vec<Vec<i32>>) -> i32 {
         for row_idx in 1..matrix.len() {
             let row_len = matrix[row_idx].len();
             for el_idx in 0..row_len {
                 let prev_row = &matrix[row_idx - 1];
-                let mut min_path = cmp::min(prev_row[el_idx], prev_row[el_idx.saturating_sub(1)]);
-                if el_idx < row_len - 1 {
-                    min_path = cmp::min(min_path, prev_row[el_idx + 1]);
-                }
+                let (left_idx, right_idx) = (el_idx.saturating_sub(1), el_idx.add(1).min(row_len - 1));
+                let min_path = prev_row[el_idx].min(prev_row[left_idx]).min(prev_row[right_idx]);
                 matrix[row_idx][el_idx] += min_path;
             }
         }
