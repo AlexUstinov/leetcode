@@ -123,10 +123,8 @@ impl fmt::Display for TreeNode {
                 }
             }
         }
-        let len = result.len();
-        if len > 1 {
-            result.truncate(len - 1);
-        }
+        // We always have trailing comma character because we have at least self value in the list
+        result.truncate(result.len() - 1);
         result.push(']');
         
         f.write_str(&result)
