@@ -1,4 +1,4 @@
-use crate::linked_list::ListNode;
+use crate::util::linked_list::ListNode;
 pub struct Solution;
 
 impl Solution {
@@ -32,7 +32,7 @@ impl Solution {
 #[cfg(test)]
 mod test {
     use test_case::test_case;
-    use crate::linked_list::ListNode;
+    use crate::util::linked_list::ListNode;
 
     use super::Solution;
 

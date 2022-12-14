@@ -1,4 +1,4 @@
-use crate::binary_tree::TreeNode;
+use crate::util::binary_tree::TreeNode;
 
 use std::cmp;
 use std::rc::Rc;
@@ -30,7 +30,7 @@ impl Solution {
 #[cfg(test)]
 mod tests {
     use test_case::test_case;
-    use crate::binary_tree::TreeNode;
+    use crate::util::binary_tree::TreeNode;
     use super::Solution;
 
     #[test_case("[1,2,3,4,5,6]", 110)]

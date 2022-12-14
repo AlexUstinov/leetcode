@@ -1,6 +1,6 @@
 use std::rc::Rc;
 use std::cell::RefCell;
-use crate::binary_tree::TreeNode;
+use crate::util::binary_tree::TreeNode;
 pub struct Solution;
 
 impl Solution {
@@ -22,7 +22,7 @@ impl Solution {
 
 #[cfg(test)]
 mod test {
-    use crate::binary_tree::TreeNode;
+    use crate::util::binary_tree::TreeNode;
     use test_case::test_case;
     use super::Solution;
 

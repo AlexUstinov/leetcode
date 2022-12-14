@@ -1,4 +1,4 @@
-use crate::binary_tree::TreeNode;
+use crate::util::binary_tree::TreeNode;
 use std::rc::Rc;
 use std::cell::RefCell;
 
@@ -29,7 +29,7 @@ impl Solution {
 
 #[cfg(test)]
 mod test {
-    use crate::binary_tree::TreeNode;
+    use crate::util::binary_tree::TreeNode;
     use test_case::test_case;
     use super::Solution;
 
