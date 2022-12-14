@@ -65,7 +65,7 @@ impl TreeNode {
     pub fn to_str(root: &Rc<RefCell<TreeNode>>) -> String {
         let mut result = String::new();
         result.push('[');
-        for num in Self::to_vec(root) {
+        for num in &root.borrow().to_vec() {
             match num {
                 None => result.push_str("null,"),
                 Some(num) => {
@@ -82,27 +82,21 @@ impl TreeNode {
         result
     }
 
-    pub fn to_vec(root: &Rc<RefCell<TreeNode>>) -> Vec<Option<i32>> {
-        let mut result = Vec::new();
-        let mut nodes = VecDeque::new();
-        nodes.push_back(Some(root.clone()));
+    pub fn to_vec(&self) -> Vec<Option<i32>> {
+        fn process_node(node: Option<&TreeNode>, result: &mut Vec<Option<i32>>, nodes: &mut VecDeque<Option<Rc<RefCell<TreeNode>>>>, val_count: &mut i32) {
+            result.push(node.map(|node| node.val));
+            if let Some(node) = node {
+                nodes.extend([node.left.clone(), node.right.clone()].into_iter());
+                *val_count += node.left.as_ref().map_or(0, |_| 1) + node.right.as_ref().map_or(0, |_| 1) - 1                    
+            }
+        }
+        let (mut result, mut nodes) = (Vec::with_capacity(15), VecDeque::with_capacity(8));
         let mut val_count = 1;
         while val_count > 0 {
-            match nodes.pop_front().expect("Queue must not be empty.") {
-                Some(node) => {
-                    let node = node.borrow();
-                    result.push(Some(node.val));
-                    val_count -= 1;
-                    if node.left.is_some() {
-                        val_count += 1;
-                    }
-                    if node.right.is_some() {
-                        val_count += 1;
-                    }
-                    nodes.push_back(node.left.clone());
-                    nodes.push_back(node.right.clone());
-                }
-                None => result.push(None)
+            match nodes.pop_front() {
+                None => process_node(Some(self), &mut result, &mut nodes, &mut val_count),
+                Some(None) => process_node(None, &mut result, &mut nodes, &mut val_count),
+                Some(node) => process_node(Some(&node.unwrap().borrow()), &mut result, &mut nodes, &mut val_count),
             }
         }
         result
@@ -119,7 +113,7 @@ mod tests {
     {
         let numbers = vec![Some(10), Some(5), Some(15), Some(3), Some(7), None, Some(18)];
         let root = TreeNode::from_vec(&numbers);
-        assert_eq!(numbers, TreeNode::to_vec(&root.unwrap()));
+        assert_eq!(numbers, root.map(|node| node.borrow().to_vec()).unwrap());
     }
 
     #[test]
@@ -127,7 +121,7 @@ mod tests {
     {
         let numbers = vec![Some(10), Some(5), Some(15), Some(3), Some(7), Some(18)];
         let root = TreeNode::from_vec(&numbers);
-        assert_eq!(numbers, TreeNode::to_vec(&root.unwrap()));
+        assert_eq!(numbers, root.map(|node| node.borrow().to_vec()).unwrap());
     }
 
     #[test]
@@ -135,7 +129,16 @@ mod tests {
     {
         let numbers = vec![Some(10), Some(5), Some(15), Some(3), Some(7), Some(18), Some(1), None, Some(6)];
         let root = TreeNode::from_vec(&numbers);
-        assert_eq!(numbers, TreeNode::to_vec(&root.unwrap()));
+        assert_eq!(numbers, root.map(|node| node.borrow().to_vec()).unwrap());
+    }
+
+    #[test_case(vec![Some(10), Some(5), Some(15), Some(3), Some(7), Some(18)])]
+    #[test_case(vec![Some(10), Some(5), Some(15), Some(3), Some(7), None, Some(18)])]
+    #[test_case(vec![Some(10), Some(5), Some(15), Some(3), Some(7), Some(18), Some(1), None, Some(6)])]
+    fn to_vec_2_method_works_correctly(numbers: Vec<Option<i32>>)
+    {
+        let root = TreeNode::from_vec(&numbers);
+        assert_eq!(numbers, root.map(|node| node.borrow().to_vec()).unwrap());
     }
 
     // [Fact]
