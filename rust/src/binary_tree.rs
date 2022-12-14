@@ -1,4 +1,4 @@
-use std::{cell::RefCell, collections::VecDeque, rc::Rc, fmt};
+use std::{cell::RefCell, collections::VecDeque, rc::Rc, fmt, iter};
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct TreeNode {
@@ -67,7 +67,7 @@ impl TreeNode {
         let mut result = String::new();
         result.push('[');
         if let Some(root) = root {
-            for num in &root.borrow().to_vec() {
+            for num in root.borrow().iter_bfs() {
                 match num {
                     None => result.push_str("null,"),
                     Some(num) => {
@@ -86,23 +86,31 @@ impl TreeNode {
     }
 
     pub fn to_vec(&self) -> Vec<Option<i32>> {
-        fn process_node(node: Option<&TreeNode>, result: &mut Vec<Option<i32>>, nodes: &mut VecDeque<Option<Rc<RefCell<TreeNode>>>>, val_count: &mut i32) {
-            result.push(node.map(|node| node.val));
+        let mut result = Vec::with_capacity(15);
+        result.extend(self.iter_bfs());
+        result
+    }
+
+    fn iter_bfs(&self) -> impl Iterator<Item=Option<i32>> + '_ {
+        fn process_node(node: Option<&TreeNode>, nodes: &mut VecDeque<Option<Rc<RefCell<TreeNode>>>>, val_count: &mut i32) -> Option<i32> {
             if let Some(node) = node {
                 nodes.extend([node.left.clone(), node.right.clone()].into_iter());
                 *val_count += node.left.as_ref().map_or(0, |_| 1) + node.right.as_ref().map_or(0, |_| 1) - 1                    
             }
+            node.map(|node| node.val)
         }
-        let (mut result, mut nodes) = (Vec::with_capacity(15), VecDeque::with_capacity(8));
+        let mut nodes = VecDeque::with_capacity(8);
         let mut val_count = 1;
-        while val_count > 0 {
-            match nodes.pop_front() {
-                None => process_node(Some(self), &mut result, &mut nodes, &mut val_count),
-                Some(None) => process_node(None, &mut result, &mut nodes, &mut val_count),
-                Some(node) => process_node(Some(&node.unwrap().borrow()), &mut result, &mut nodes, &mut val_count),
+        iter::from_fn(move || {
+            if val_count==0 {
+                return None;
             }
-        }
-        result
+            Some(match nodes.pop_front() {
+                None => process_node(Some(self), &mut nodes, &mut val_count),
+                Some(None) => process_node(None, &mut nodes, &mut val_count),
+                Some(node) => process_node(Some(&node.unwrap().borrow()), &mut nodes, &mut val_count),
+            })
+        })
     }
 }
 
@@ -112,7 +120,7 @@ impl fmt::Display for TreeNode {
         let mut result = String::new();
         let mut count = 0;
         result.push('[');
-        for num in self.to_vec().iter() {
+        for num in self.iter_bfs() {
             count += 1;
             if count > MAX_COUNT {
                 result.push_str("...,");
