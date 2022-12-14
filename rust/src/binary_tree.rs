@@ -1,4 +1,4 @@
-use std::{cell::RefCell, collections::VecDeque, rc::Rc};
+use std::{cell::RefCell, collections::VecDeque, rc::Rc, fmt};
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct TreeNode {
@@ -103,6 +103,36 @@ impl TreeNode {
     }
 }
 
+impl fmt::Display for TreeNode {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        const MAX_COUNT: i32 = 15;
+        let mut result = String::new();
+        let mut count = 0;
+        result.push('[');
+        for num in self.to_vec().iter() {
+            count += 1;
+            if count > MAX_COUNT {
+                result.push_str("...,");
+                break;
+            }
+            match num {
+                None => result.push_str("null,"),
+                Some(num) => {
+                    result.push_str(&num.to_string());
+                    result.push(',');
+                }
+            }
+        }
+        let len = result.len();
+        if len > 1 {
+            result.truncate(len - 1);
+        }
+        result.push(']');
+        
+        f.write_str(&result)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::TreeNode;
@@ -117,22 +147,22 @@ mod tests {
         assert_eq!(numbers, root.map(|node| node.borrow().to_vec()).unwrap());
     }
 
-    // [Fact]
-    // public void ToStringMethodDoesntTruncateTreeWithLessThan16Nodes()
-    // {
-    //     const string tree = "[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]";
-    //     var root = TreeNode.FromString(tree);
-    //     Assert.Equal(tree, root!.ToString());
-    // }
+    #[test]
+    fn display_fmt_doesnt_truncate_tree_with_less_than_16_nodes()
+    {
+        const TREE: &str = "[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]";
+        let root = TreeNode::from_str(TREE);
+        assert_eq!(TREE, root.map(|node| node.borrow().to_string()).unwrap());
+    }
 
-    // [Fact]
-    // public void ToStringMethodTruncatesTreesWithOver15Nodes()
-    // {
-    //     const string tree = "[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]";
-    //     const string truncatedTree = "[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,...]";
-    //     var root = TreeNode.FromString(tree);
-    //     Assert.Equal(truncatedTree, root!.ToString());
-    // }
+    #[test]
+    fn display_fmt_truncates_trees_with_over_15_nodes()
+    {
+        const TREE: &str = "[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]";
+        const TRUNCATED_TREE: &str = "[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,...]";
+        let root = TreeNode::from_str(TREE);
+        assert_eq!(TRUNCATED_TREE, root.map(|node| node.borrow().to_string()).unwrap());
+    }
 
     #[test_case("[10,5,15,3,7,null,18]")]
     #[test_case("[10,5,15,3,7,13,18,1,null,6]")]
