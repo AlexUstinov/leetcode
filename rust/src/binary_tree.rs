@@ -19,14 +19,15 @@ impl TreeNode {
 
     pub fn str_to_vec(values: &str) -> Vec<Option<i32>> {
         let trim_pat: &[_] = &[' ', '[', ']'];
-        values
-            .trim_matches(trim_pat)
-            .split(',')
-            .map(|token| match token.trim() {
-                "" | "null" => None,
-                other => Some(other.parse::<i32>().unwrap())
-            })
-            .collect()
+        match values.trim_matches(trim_pat) {
+            "" => Vec::new(),
+            other => other.split(',')
+                .map(|token| match token.trim() {
+                    "" | "null" => None,
+                    other => Some(other.parse::<i32>().unwrap())
+                })
+                .collect()
+        }            
     }
 
     pub fn from_str(values: &str) -> Option<Rc<RefCell<TreeNode>>> {
@@ -62,15 +63,17 @@ impl TreeNode {
         root
     }
 
-    pub fn to_str(root: &Rc<RefCell<TreeNode>>) -> String {
+    pub fn to_str(root: &Option<Rc<RefCell<TreeNode>>>) -> String {
         let mut result = String::new();
         result.push('[');
-        for num in &root.borrow().to_vec() {
-            match num {
-                None => result.push_str("null,"),
-                Some(num) => {
-                    result.push_str(&num.to_string());
-                    result.push(',');
+        if let Some(root) = root {
+            for num in &root.borrow().to_vec() {
+                match num {
+                    None => result.push_str("null,"),
+                    Some(num) => {
+                        result.push_str(&num.to_string());
+                        result.push(',');
+                    }
                 }
             }
         }
@@ -167,6 +170,13 @@ mod tests {
     #[test_case("[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]")]
     fn to_str_method_serializes_tree_properly(tree: &str) {
         let root = TreeNode::from_str(tree);
-        assert_eq!(tree, TreeNode::to_str(&root.unwrap()));
+        assert_eq!(tree, TreeNode::to_str(&root));
+    }
+
+    #[test]
+    fn to_str_method_serializes_empty_tree_properly() {
+        const TREE: &str = "[]";
+        let root = TreeNode::from_str(TREE);
+        assert_eq!(TREE, TreeNode::to_str(&root));
     }
 }
