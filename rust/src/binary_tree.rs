@@ -111,7 +111,7 @@ mod tests {
     #[test_case(vec![Some(10), Some(5), Some(15), Some(3), Some(7), Some(18)])]
     #[test_case(vec![Some(10), Some(5), Some(15), Some(3), Some(7), None, Some(18)])]
     #[test_case(vec![Some(10), Some(5), Some(15), Some(3), Some(7), Some(18), Some(1), None, Some(6)])]
-    fn to_vec_2_method_works_correctly(numbers: Vec<Option<i32>>)
+    fn to_vec_method_works_correctly(numbers: Vec<Option<i32>>)
     {
         let root = TreeNode::from_vec(&numbers);
         assert_eq!(numbers, root.map(|node| node.borrow().to_vec()).unwrap());
