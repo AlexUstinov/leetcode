@@ -17,5 +17,6 @@ pub mod p0872_leaf_similar_trees;
 pub mod p0876_middle_of_the_linked_list;
 pub mod p0931_minimum_falling_path;
 pub mod p0938_range_sum_of_bst;
+pub mod p1143_longest_common_subsequence;
 pub mod p1339_maximum_product_of_splitted_binary_tree;
 pub mod p2256_minimal_average_difference;
