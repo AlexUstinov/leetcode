@@ -108,30 +108,6 @@ mod tests {
     use super::TreeNode;
     use test_case::test_case;
 
-    #[test]
-    fn to_vec_method_works_correctly_1()
-    {
-        let numbers = vec![Some(10), Some(5), Some(15), Some(3), Some(7), None, Some(18)];
-        let root = TreeNode::from_vec(&numbers);
-        assert_eq!(numbers, root.map(|node| node.borrow().to_vec()).unwrap());
-    }
-
-    #[test]
-    fn to_vec_method_works_correctly_2()
-    {
-        let numbers = vec![Some(10), Some(5), Some(15), Some(3), Some(7), Some(18)];
-        let root = TreeNode::from_vec(&numbers);
-        assert_eq!(numbers, root.map(|node| node.borrow().to_vec()).unwrap());
-    }
-
-    #[test]
-    fn to_vec_method_works_correctly_3()
-    {
-        let numbers = vec![Some(10), Some(5), Some(15), Some(3), Some(7), Some(18), Some(1), None, Some(6)];
-        let root = TreeNode::from_vec(&numbers);
-        assert_eq!(numbers, root.map(|node| node.borrow().to_vec()).unwrap());
-    }
-
     #[test_case(vec![Some(10), Some(5), Some(15), Some(3), Some(7), Some(18)])]
     #[test_case(vec![Some(10), Some(5), Some(15), Some(3), Some(7), None, Some(18)])]
     #[test_case(vec![Some(10), Some(5), Some(15), Some(3), Some(7), Some(18), Some(1), None, Some(6)])]
