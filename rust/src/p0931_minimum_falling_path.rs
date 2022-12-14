@@ -37,31 +37,20 @@ impl IterSolution {
 #[cfg(test)]
 mod tests {
     use test_case::test_case;
+    use crate::util::parse_matrix;
     use super::*;
 
     #[test_case("[[2,1,3],[6,5,4],[7,8,9]]", 13)]
     #[test_case("[[-19,57],[-40,-5]]", -59)]
     #[test_case("[[1]]", 1)]
     fn solve(matrix: &str, expected: i32) {
-        assert_eq!(expected, Solution::min_falling_path_sum(self::parse_matrix(matrix)));
+        assert_eq!(expected, Solution::min_falling_path_sum(parse_matrix(matrix)));
     }
 
     #[test_case("[[2,1,3],[6,5,4],[7,8,9]]", 13)]
     #[test_case("[[-19,57],[-40,-5]]", -59)]
     #[test_case("[[1]]", 1)]
     fn solve_iter(matrix: &str, expected: i32) {
-        assert_eq!(expected, IterSolution::min_falling_path_sum(self::parse_matrix(matrix)));
-    }
-
-    fn parse_matrix(matrix: &str) -> Vec<Vec<i32>> {
-        let trim_pat: &[_] = &[' ', '[', ']'];
-        let rows = matrix
-            .trim_matches(trim_pat)
-            .split("],[");
-        let mut result = Vec::<Vec<i32>>::new();
-        for row in rows {
-            result.push(row.trim_matches(trim_pat).split(',').map(|el| el.parse().unwrap()).collect());
-        }
-        result
+        assert_eq!(expected, IterSolution::min_falling_path_sum(parse_matrix(matrix)));
     }
 }
