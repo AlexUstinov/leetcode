@@ -20,4 +20,5 @@ pub mod p0938_range_sum_of_bst;
 pub mod p1066_campus_bikes_ii;
 pub mod p1143_longest_common_subsequence;
 pub mod p1339_maximum_product_of_splitted_binary_tree;
+pub mod p1971_valid_path_in_graph;
 pub mod p2256_minimal_average_difference;
