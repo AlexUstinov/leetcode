@@ -12,6 +12,7 @@ pub mod p0009_palindrome_number;
 pub mod p0010_regular_expression_matching;
 pub mod p0328_odd_even_linked_list;
 pub mod p0451_sort_characters_by_frequency;
+pub mod p0739_daily_temperatures;
 pub mod p0872_leaf_similar_trees;
 pub mod p0876_middle_of_the_linked_list;
 pub mod p0931_minimum_falling_path;
