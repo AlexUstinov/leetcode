@@ -10,6 +10,7 @@ pub mod p0007_reverse_integer;
 pub mod p0008_string_to_integer;
 pub mod p0009_palindrome_number;
 pub mod p0010_regular_expression_matching;
+pub mod p0025_reverse_nodes_in_k_groups;
 pub mod p0055_jump_game;
 pub mod p0328_odd_even_linked_list;
 pub mod p0451_sort_characters_by_frequency;
