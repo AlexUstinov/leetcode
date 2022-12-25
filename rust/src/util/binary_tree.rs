@@ -17,21 +17,8 @@ impl TreeNode {
         }
     }
 
-    pub fn str_to_vec(values: &str) -> Vec<Option<i32>> {
-        let trim_pat: &[_] = &[' ', '[', ']'];
-        match values.trim_matches(trim_pat) {
-            "" => Vec::new(),
-            other => other.split(',')
-                .map(|token| match token.trim() {
-                    "" | "null" => None,
-                    other => Some(other.parse::<i32>().unwrap())
-                })
-                .collect()
-        }            
-    }
-
     pub fn from_str(values: &str) -> Option<Rc<RefCell<TreeNode>>> {
-        Self::from_vec(&Self::str_to_vec(values))
+        Self::from_vec(&super::parse_opt_values(values))
     }
 
     pub fn from_vec(values: &Vec<Option<i32>>) -> Option<Rc<RefCell<TreeNode>>> {

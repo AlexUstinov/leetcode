@@ -1,3 +1,5 @@
+use std::iter;
+
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct ListNode {
     pub val: i32,
@@ -8,6 +10,21 @@ impl ListNode {
     #[inline]
     pub fn new(val: i32) -> Self {
         ListNode { next: None, val }
+    }
+
+    pub fn from_str(values: &str) -> Option<Box<ListNode>> {
+        Self::from_vec(&super::parse_values(values))
+    }
+
+    pub fn from_vec(values: &Vec<i32>) -> Option<Box<ListNode>> {
+        let mut head = ListNode::new(0);
+        for num in values.iter().rev() {
+            head.next = Some(Box::new(ListNode {
+                val: *num,
+                next: head.next,
+            }));
+        }
+        head.next
     }
 
     pub fn from_num(mut num: i32) -> Option<Box<ListNode>> {
@@ -35,6 +52,29 @@ impl ListNode {
         dummy_head.unwrap().next
     }
 
+    pub fn to_str(head: &Option<Box<ListNode>>) -> String {
+        let mut result = String::new();
+        result.push('[');
+        if let Some(root) = head {
+            for num in root.iter_vals() {
+                result.push_str(&num.to_string());
+                result.push(',');
+            }
+        }
+        let len = result.len();
+        if len > 1 {
+            result.truncate(len - 1);
+        }
+        result.push(']');
+        result
+    }
+
+    pub fn to_vec(&self) -> Vec<i32> {
+        let mut result = Vec::with_capacity(15);
+        result.extend(self.iter_vals());
+        result
+    }
+
     pub fn to_num(mut head: &Option<Box<ListNode>>) -> i32 {
         let mut num = 0;
         while let Some(node) = head {
@@ -54,4 +94,16 @@ impl ListNode {
         }
         num
     }
+
+    fn iter_vals(&self) -> impl Iterator<Item=i32> + '_ {
+        let mut next: Option<&Option<Box<ListNode>>> = None;
+        iter::from_fn(move || {
+            match next {
+                None => { next = Some(&self.next); Some(self.val) },
+                Some(Some(node)) => { next = Some(&node.next); Some(node.val) },
+                Some(None) => None
+            }            
+        })
+    }
+
 }
