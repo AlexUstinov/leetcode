@@ -1,4 +1,4 @@
-use std::iter;
+use std::{iter, fmt};
 
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct ListNode {
@@ -16,7 +16,7 @@ impl ListNode {
         Self::from_vec(&super::parse_values(values))
     }
 
-    pub fn from_vec(values: &Vec<i32>) -> Option<Box<ListNode>> {
+    pub fn from_vec(values: &[i32]) -> Option<Box<ListNode>> {
         let mut head = ListNode::new(0);
         for num in values.iter().rev() {
             head.next = Some(Box::new(ListNode {
@@ -106,4 +106,27 @@ impl ListNode {
         })
     }
 
+}
+
+impl fmt::Display for ListNode {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        const MAX_COUNT: i32 = 15;
+        let mut result = String::new();
+        let mut count = 0;
+        result.push('[');
+        for num in self.iter_vals() {
+            count += 1;
+            if count > MAX_COUNT {
+                result.push_str("...,");
+                break;
+            }
+            result.push_str(&num.to_string());
+            result.push(',');
+        }
+        // We always have trailing comma character because we have at least self value in the list
+        result.truncate(result.len() - 1);
+        result.push(']');
+        
+        f.write_str(&result)
+    }
 }
