@@ -4,47 +4,37 @@ pub struct Solution2;
 
 impl Solution1 {
     pub fn reverse_k_group(mut head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
-        fn reverse_list(mut head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
-            let mut result = None;
-            while let Some(mut node) = head {
-                head = node.next.take();
-                result.insert(node).next = result.take();
-            }
-            result
-        }
-        fn link_node(tail: &mut Option<Box<ListNode>>, node: Option<Box<ListNode>>) -> &mut Option<Box<ListNode>> {
-            let tail = tail.as_deref_mut().expect("Tail should point to the existing node.");
-            tail.next = node;
-            &mut tail.next
-        }
-
-        let mut dummy_head = Some(Box::new(ListNode::new(0)));
-        let mut result_tail = &mut dummy_head;
-        let mut g_head = None;
-        let (mut g_tail, mut g_count) = (&mut g_head, 0);
+        let mut result = None;
+        let mut result_tail = &mut result;
+        let (mut g_head, mut g_count) = (None, 0);
 
         while let Some(mut node) = head {
             head = node.next.take();
             if g_count % k == 0 {
-                let mut g = reverse_list(g_head);
-                while let Some(mut node) = g {
-                    g = node.next.take();
-                    result_tail = link_node(result_tail, Some(node));
+                if let Some(group) = g_head.replace(node) {
+                    _ = result_tail.insert(group);
+                    while let Some(node) = result_tail {
+                        result_tail = &mut node.next;
+                    }
                 }
-                g_head = Some(node);
-                g_tail = &mut g_head;
             }
             else {
-                g_tail = link_node(g_tail, Some(node));
+                g_head.insert(node).next = g_head.take();
             }
             g_count += 1;
         }
-        if g_count % k == 0 {
-            g_head = reverse_list(g_head);
+        if g_count % k != 0 {
+            let mut tail_head = g_head.take();
+            while let Some(mut node) = tail_head {
+                tail_head = node.next.take();
+                g_head.insert(node).next = g_head.take();
+            }
         }
-        link_node(result_tail, g_head);
+        if let Some(tail) = g_head {
+            _ = result_tail.insert(tail);
+        }
 
-        dummy_head.expect("Dummy head is never None.").next
+        result
     }
 }
 
