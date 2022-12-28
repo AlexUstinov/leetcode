@@ -38,42 +38,30 @@ struct Task {
     idx: i32
 }
 
-enum State {
-    Idle, Processing
-}
-
 impl Solution {
     pub fn get_order(tasks: Vec<Vec<i32>>) -> Vec<i32> {
         let mut wait_queue = tasks.iter().enumerate()
             .map(|(idx, t)| WaitingTask::new(t[0], t[1], idx as i32))
             .collect::<BinaryHeap<WaitingTask>>();
-        let mut task_queue = BinaryHeap::new();
+        let mut processing_queue = BinaryHeap::new();
         let mut result = Vec::with_capacity(tasks.len());
         let mut time = 0;
-        let mut state = State::Processing;
 
-        while !wait_queue.is_empty() || !task_queue.is_empty() {
-            match state {
-                State::Idle => {
-                    while let Some(task) = wait_queue.peek() {
-                        if task.ready_time > time {
-                            break;
-                        }
-                        task_queue.push(Reverse(wait_queue.pop().unwrap().task))
-                    }
-                    state = State::Processing;
-                },
-                State::Processing => {
-                    if let Some(Reverse(task)) = task_queue.pop() {
-                        result.push(task.idx);
-                        time += task.processing_time;
-                    }
-                    else if let Some(next_task) = wait_queue.peek() {
-                        if time < next_task.ready_time {
-                            time = next_task.ready_time;
-                        }
-                    }
-                    state = State::Idle;
+        while !wait_queue.is_empty() || !processing_queue.is_empty() {
+            while let Some(task) = wait_queue.peek() {
+                if task.ready_time > time {
+                    break;
+                }
+                processing_queue.push(Reverse(wait_queue.pop().unwrap().task))
+            }
+
+            if let Some(Reverse(task)) = processing_queue.pop() {
+                result.push(task.idx);
+                time += task.processing_time;
+            }
+            else if let Some(next_task) = wait_queue.peek() {
+                if time < next_task.ready_time {
+                    time = next_task.ready_time;
                 }
             }
         }
