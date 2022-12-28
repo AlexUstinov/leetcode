@@ -8,8 +8,7 @@ impl Solution1 {
             let mut result = None;
             while let Some(mut node) = head {
                 head = node.next.take();
-                let r = result.take();
-                result.insert(node).next = r;
+                result.insert(node).next = result.take();
             }
             result
         }
