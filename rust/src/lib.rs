@@ -20,6 +20,7 @@ pub mod p0872_leaf_similar_trees;
 pub mod p0876_middle_of_the_linked_list;
 pub mod p0931_minimum_falling_path;
 pub mod p0938_range_sum_of_bst;
+pub mod p0980_unique_paths_iii;
 pub mod p1066_campus_bikes_ii;
 pub mod p1143_longest_common_subsequence;
 pub mod p1167_minimum_cost_to_connect_sticks;
