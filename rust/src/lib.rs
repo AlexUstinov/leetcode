@@ -28,3 +28,5 @@ pub mod p1339_maximum_product_of_splitted_binary_tree;
 pub mod p1834_single_threaded_cpu;
 pub mod p1971_valid_path_in_graph;
 pub mod p2256_minimal_average_difference;
+
+pub mod comp_problem;
