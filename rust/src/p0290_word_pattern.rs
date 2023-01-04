@@ -5,8 +5,11 @@ impl Solution {
     pub fn word_pattern(pattern: String, s: String) -> bool {
         let mut lkp = HashMap::new();
         let mut words = HashSet::new();
-        let (mut char_iter, mut word_iter) = (pattern.chars(), s.split(' '));
-        for (c, word) in &mut char_iter.zip(&mut word_iter) {
+        let word_vec = s.split(' ').collect::<Vec<_>>();
+        if pattern.len() != word_vec.len() {
+            return false;
+        }
+        for (c, word) in pattern.chars().zip(word_vec.iter()) {
             match lkp.get(&c) {
                 Some(prev_word) if prev_word!=&word => { return false; },
                 None => {
@@ -19,7 +22,7 @@ impl Solution {
                 _ => continue
             };
         }
-        char_iter.next().is_none() && word_iter.next().is_none()
+        true
     }
 }
 
