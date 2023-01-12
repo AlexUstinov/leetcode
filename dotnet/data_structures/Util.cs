@@ -7,6 +7,7 @@ public static class Util
         return pairs
             .Trim(' ', '[', ']')
             .Split("],[")
+            .Where(token => !string.IsNullOrWhiteSpace(token))
             .Select(row => row
                 .Trim(' ', '[', ']')
                 .Split(',', 2)
