@@ -99,6 +99,6 @@ public class P2421_NumberOfGoodPaths {
     [InlineData("[1,3,2,1,3]", "[[0,1],[0,2],[2,3],[2,4]]", 6)]
     public void Solve(string vals, string edges, int expected)
     {
-        Assert.Equal(expected, NumberOfGoodPaths(vals.Trim('[', ']').Split(',').Select(el => int.Parse(el)).ToArray(), Util.ParsePairs(edges)));
+        Assert.Equal(expected, NumberOfGoodPaths(Util.ParseValues(vals), Util.ParsePairs(edges)));
     }     
 }

@@ -15,4 +15,6 @@ public static class Util
                 .ToArray())
             .ToArray();
     }
+
+    public static int[] ParseValues(string vals) => vals.Trim('[', ']').Split(',').Select(el => int.Parse(el)).ToArray();
 }
