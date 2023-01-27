@@ -18,6 +18,7 @@ pub mod p0290_word_pattern;
 pub mod p0328_odd_even_linked_list;
 pub mod p0451_sort_characters_by_frequency;
 pub mod p0452_min_number_of_arrows_to_burst_baloons;
+pub mod p0576_out_of_boundary_paths;
 pub mod p0646_max_length_of_pair_chain;
 pub mod p0739_daily_temperatures;
 pub mod p0787_find_cheapest_path;
