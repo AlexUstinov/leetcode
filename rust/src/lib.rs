@@ -32,6 +32,7 @@ pub mod p0980_unique_paths_iii;
 pub mod p1066_campus_bikes_ii;
 pub mod p1130_min_cost_tree_from_leaf_values;
 pub mod p1143_longest_common_subsequence;
+pub mod p1162_as_far_from_land_as_possible;
 pub mod p1167_minimum_cost_to_connect_sticks;
 pub mod p1339_maximum_product_of_splitted_binary_tree;
 pub mod p1519_number_of_nodes_in_subtree_with_same_label;
