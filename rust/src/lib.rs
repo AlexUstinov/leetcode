@@ -28,6 +28,7 @@ pub mod p0790_domino_and_tromino_tiling;
 pub mod p0872_leaf_similar_trees;
 pub mod p0876_middle_of_the_linked_list;
 pub mod p0909_snakes_and_ladders;
+pub mod p0912_sort_an_array;
 pub mod p0931_minimum_falling_path;
 pub mod p0938_range_sum_of_bst;
 pub mod p0980_unique_paths_iii;
