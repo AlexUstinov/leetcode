@@ -2,44 +2,35 @@ pub struct Solution;
 
 impl Solution {
     pub fn str_str(haystack: String, needle: String) -> i32 {
-        let (m, n) = (haystack.len(), needle.len());
-        if m < n {
+        if haystack.len() < needle.len() {
             return -1;
         }
         fn pre_kmp(needle: &[u8]) -> Vec<usize> {
-            let n = needle.len();
-            let mut lcp = vec![0; n];
-            let mut prev = 0;
-            for i in 1..n {
-                let a = needle[i];
-                let mut b = needle[prev];
-                while prev > 0 && a != b {
-                    prev = lcp[prev - 1];
-                    b = needle[prev];
+            let mut kmp = vec![0; needle.len()];
+            let mut pref = 0;
+            for (suff, &c) in needle.iter().enumerate().skip(1) {
+                while pref > 0 && needle[pref] != c {
+                    pref = kmp[pref - 1];
                 }
-                if a == b {
-                    prev += 1;
+                if needle[pref] == c {
+                    pref += 1;
                 }
-                lcp[i] = prev
+                kmp[suff] = pref;
             }
-
-            lcp
+            kmp
         }
-        let haystack = haystack.as_bytes();
         let needle = needle.as_bytes();
-        let lcp = pre_kmp(needle);
-        let mut j = 0;
-        for (i, &a) in haystack.iter().enumerate() {
-            let mut b = needle[j];
-            while j > 0 && a != b {
-                j = lcp[j - 1];
-                b = needle[j];
+        let kmp = pre_kmp(needle);
+        let (mut needle_idx, last_needle_idx) = (0, needle.len() - 1);
+        for (haystack_idx, c) in haystack.bytes().enumerate() {
+            while needle_idx > 0 && needle[needle_idx] != c {
+                needle_idx = kmp[needle_idx - 1];
             }
-            if a == b {
-                j += 1;
-                if j==n {
-                    return (i + 1 - n) as i32;
+            if needle[needle_idx] == c {
+                if needle_idx == last_needle_idx {
+                    return (haystack_idx - needle_idx) as i32;
                 }
+                needle_idx += 1;
             }
         }
         -1
@@ -53,6 +44,7 @@ mod tests {
 
     #[test_case("onionionskys", "onions", 3)]
     #[test_case("sadbutsad", "sad", 0)]
+    #[test_case("aaaaa", "bba", -1)]
     fn solve(haystack: &str, needle: &str, expected: i32) {
         assert_eq!(expected, Solution::str_str(String::from(haystack), String::from(needle)));
     }
