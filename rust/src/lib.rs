@@ -44,6 +44,7 @@ pub mod p1971_valid_path_in_graph;
 pub mod p2244_min_rounds_to_complete_all_tasks;
 pub mod p2256_minimal_average_difference;
 pub mod p2421_number_of_good_paths;
+pub mod p2444_count_subarrays_with_fixed_bounds;
 pub mod p2565_subsequence_with_the_minimum_score;
 pub mod p2573_find_the_string_with_lcp;
 
