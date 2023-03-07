@@ -47,5 +47,6 @@ pub mod p2421_number_of_good_paths;
 pub mod p2444_count_subarrays_with_fixed_bounds;
 pub mod p2565_subsequence_with_the_minimum_score;
 pub mod p2573_find_the_string_with_lcp;
+pub mod p2580_count_ways_to_group_overlapping_ranges;
 
 pub mod comp_problem;
