@@ -34,6 +34,7 @@ pub mod p0909_snakes_and_ladders;
 pub mod p0912_sort_an_array;
 pub mod p0931_minimum_falling_path;
 pub mod p0938_range_sum_of_bst;
+pub mod p0951_check_completeness_of_binary_tree;
 pub mod p0980_unique_paths_iii;
 pub mod p1066_campus_bikes_ii;
 pub mod p1130_min_cost_tree_from_leaf_values;
