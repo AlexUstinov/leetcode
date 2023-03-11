@@ -24,7 +24,7 @@ use std::rc::Rc;
 use std::cell::RefCell;
 impl Solution {
     pub fn is_complete_tree(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
-        let max_depth = {
+        let mut max_depth = {
             let mut depth = 0;
             let mut next = root.clone();
             while let Some(node) = next {
@@ -34,10 +34,9 @@ impl Solution {
             }
             depth
         };
-        let mut max_depth_seq = std::iter::repeat(max_depth);
         let mut stack = vec![(root, 1)];
         let mut is_lvl_tail = false;
-        while let Some(((node, depth), max_depth)) = stack.pop().zip(max_depth_seq.next()) {
+        while let Some((node, depth)) = stack.pop() {
             if let Some(node) = node.as_ref() {
                 let TreeNode { ref left, ref right, .. } = &*node.borrow();
                 if depth == max_depth {
@@ -48,7 +47,7 @@ impl Solution {
                 }
                 if !is_lvl_tail && depth == max_depth - 1 && right.is_none() {
                     is_lvl_tail = true;
-                    max_depth_seq = std::iter::repeat(max_depth-1);
+                    max_depth -= 1;
                     if left.is_some() {
                         stack.push((left.clone(), depth));
                     }
