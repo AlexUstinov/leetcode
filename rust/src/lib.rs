@@ -14,6 +14,7 @@ pub mod p0025_reverse_nodes_in_k_groups;
 pub mod p0028_find_index_of_the_first_occurence_in_the_string;
 pub mod p0029_divide_two_integers;
 pub mod p0030_concatenation_of_all_words;
+pub mod p0033_search_in_rotated_sorted_array;
 pub mod p0055_jump_game;
 pub mod p0149_max_points_on_a_line;
 pub mod p0167_two_sum_ii_input_is_sorted;
