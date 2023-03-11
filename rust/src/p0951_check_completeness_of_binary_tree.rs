@@ -34,7 +34,7 @@ impl Solution {
             }
             depth
         };
-        let mut max_depth_seq = Some(max_depth).into_iter().chain(std::iter::repeat(max_depth));
+        let mut max_depth_seq = std::iter::repeat(max_depth);
         let mut stack = vec![(root, 1)];
         let mut is_lvl_tail = false;
         while let Some(((node, depth), max_depth)) = stack.pop().zip(max_depth_seq.next()) {
@@ -48,12 +48,9 @@ impl Solution {
                 }
                 if !is_lvl_tail && depth == max_depth - 1 && right.is_none() {
                     is_lvl_tail = true;
-                    max_depth_seq = match left.is_some() {
-                        true => Some(max_depth).into_iter().chain(std::iter::repeat(max_depth-1)),
-                        false => Some(max_depth-1).into_iter().chain(std::iter::repeat(max_depth-1))
-                    };
+                    max_depth_seq = std::iter::repeat(max_depth-1);
                     if left.is_some() {
-                        stack.push((left.clone(), depth + 1));
+                        stack.push((left.clone(), depth));
                     }
                     continue;
                 }
