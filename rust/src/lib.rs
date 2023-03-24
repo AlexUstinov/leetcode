@@ -16,6 +16,7 @@ pub mod p0029_divide_two_integers;
 pub mod p0030_concatenation_of_all_words;
 pub mod p0033_search_in_rotated_sorted_array;
 pub mod p0055_jump_game;
+pub mod p0103_bin_tree_zigzag_lvl_traversal;
 pub mod p0149_max_points_on_a_line;
 pub mod p0167_two_sum_ii_input_is_sorted;
 pub mod p0290_word_pattern;
