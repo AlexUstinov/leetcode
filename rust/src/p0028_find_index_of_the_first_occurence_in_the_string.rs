@@ -1,6 +1,7 @@
-pub struct Solution;
+pub struct Solution1;
+pub struct Solution2;
 
-impl Solution {
+impl Solution1 {
     pub fn str_str(haystack: String, needle: String) -> i32 {
         if haystack.len() < needle.len() {
             return -1;
@@ -37,16 +38,49 @@ impl Solution {
     }
 }
 
+impl Solution2 {
+    pub fn str_str(haystack: String, needle: String) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let needle_len = needle.len();
+        if needle_len <= haystack.len() {
+            let max_weight = (0..needle_len).fold(1, |weight, _| (weight * 26) % MOD);
+            let needle_bytes = needle.as_bytes();
+            let needle_hash = needle_bytes.iter().copied().fold(0, |hash, c| (hash*26 + (c - b'a') as i64) % MOD);
+            let hay_bytes = haystack.as_bytes();
+            let mut hay_hash = 0;
+            let mut prev_start = None;
+            for (i, w) in hay_bytes.windows(needle_len).enumerate() {
+                hay_hash = match prev_start {
+                    None => w.iter().copied().fold(0, |hash, c| (hash*26 + (c - b'a') as i64) % MOD),
+                    Some(prev) => ((hay_hash * 26) % MOD - (prev * max_weight) % MOD + (w[needle_len - 1] - b'a') as i64 + MOD) % MOD
+                };
+                if hay_hash==needle_hash && w==needle_bytes {
+                    return i as i32;
+                }
+                prev_start = Some((w[0] - b'a') as i64);
+            }
+        }
+        -1
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use test_case::test_case;
-    use super::Solution;
+    use super::*;
 
     #[test_case("onionionskys", "onions", 3)]
     #[test_case("sadbutsad", "sad", 0)]
     #[test_case("aaaaa", "bba", -1)]
-    fn solve(haystack: &str, needle: &str, expected: i32) {
-        assert_eq!(expected, Solution::str_str(String::from(haystack), String::from(needle)));
+    fn solve1(haystack: &str, needle: &str, expected: i32) {
+        assert_eq!(expected, Solution1::str_str(String::from(haystack), String::from(needle)));
+    }
+    #[test_case("onionionskys", "onions", 3)]
+    #[test_case("sadbutsad", "sad", 0)]
+    #[test_case("sadbutsad", "dbut", 2)]
+    #[test_case("aaaaa", "bba", -1)]
+    fn solve2(haystack: &str, needle: &str, expected: i32) {
+        assert_eq!(expected, Solution2::str_str(String::from(haystack), String::from(needle)));
     }
 
 }
