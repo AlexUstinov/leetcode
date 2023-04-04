@@ -22,6 +22,7 @@ pub mod p0149_max_points_on_a_line;
 pub mod p0167_two_sum_ii_input_is_sorted;
 pub mod p0290_word_pattern;
 pub mod p0328_odd_even_linked_list;
+pub mod p0329_longest_increasing_path_in_matrix;
 pub mod p0451_sort_characters_by_frequency;
 pub mod p0452_min_number_of_arrows_to_burst_baloons;
 pub mod p0576_out_of_boundary_paths;
