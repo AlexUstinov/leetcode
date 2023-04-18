@@ -72,7 +72,7 @@ impl Solution2 {
 
 // Dijkstra solution
 // See https://leetcode.com/explore/featured/card/graph/622/single-source-shortest-path-algorithm/3862/
-struct Solution3;
+pub struct Solution3;
 impl Solution3 {
     pub fn find_cheapest_price(n: i32, flights: Vec<Vec<i32>>, src: i32, dst: i32, k: i32) -> i32 {
         use std::collections::BinaryHeap;
