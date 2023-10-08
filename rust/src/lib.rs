@@ -45,6 +45,7 @@ pub mod p1143_longest_common_subsequence;
 pub mod p1162_as_far_from_land_as_possible;
 pub mod p1167_minimum_cost_to_connect_sticks;
 pub mod p1339_maximum_product_of_splitted_binary_tree;
+pub mod p1458_max_dot_product;
 pub mod p1519_number_of_nodes_in_subtree_with_same_label;
 pub mod p1834_single_threaded_cpu;
 pub mod p1971_valid_path_in_graph;
