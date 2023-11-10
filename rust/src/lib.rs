@@ -48,6 +48,7 @@ pub mod p1203_sort_items_by_groups_respecting_dependencies;
 pub mod p1339_maximum_product_of_splitted_binary_tree;
 pub mod p1458_max_dot_product;
 pub mod p1519_number_of_nodes_in_subtree_with_same_label;
+pub mod p1743_restore_array_from_adjacent_pairs;
 pub mod p1834_single_threaded_cpu;
 pub mod p1971_valid_path_in_graph;
 pub mod p2244_min_rounds_to_complete_all_tasks;
