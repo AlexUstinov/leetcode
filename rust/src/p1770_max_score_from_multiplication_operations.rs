@@ -8,14 +8,14 @@ pub struct Solution {}
 impl Solution {
     pub fn maximum_score(nums: Vec<i32>, multipliers: Vec<i32>) -> i32 {
         let (n, m) = (nums.len(), multipliers.len());
-        let mut score = vec![0; n+1];
+        let mut score = vec![0; m+1];
         for k in (0..m).rev() {
-            let nums_len = n - k;
-            for i in 0..=n-nums_len {
+            let distance_to_right = n - k - 1;
+            for left in 0..=k {
                 let factor = multipliers[k];
-                score[i] = std::cmp::max(
-                    factor*nums[i] + score[i+1],
-                    factor*nums[i+nums_len-1] + score[i]
+                score[left] = std::cmp::max(
+                    factor*nums[left] + score[left+1],
+                    factor*nums[left+distance_to_right] + score[left]
                 );
             }
         }
