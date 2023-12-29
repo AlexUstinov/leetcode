@@ -2,29 +2,35 @@ pub struct Solution;
 
 use std::collections::HashMap;
 
+#[derive(Eq, Hash, PartialEq)]
+struct DpKey(usize, i32, Option<(u8, i32)>);
+
 impl Solution {
     pub fn get_length_of_optimal_compression(s: String, k: i32) -> i32 {
-        fn get_compressed_len(dp: &mut HashMap<(usize, i32, Option<(u8, i32)>), i32>, s: &[u8], k: i32, tail: Option<(u8, i32)>) -> i32 {
+        fn get_compressed_len(dp: &mut HashMap<DpKey, i32>, s: &[u8], k: i32, tail: Option<(u8, i32)>) -> Option<i32> {
             fn get_encoded_len(len: i32) -> i32 { 
                 i32::from(len>0) + i32::from(len>1) + i32::from(len>9) + i32::from(len>99)
             }
+            if k < 0 {
+                return None;
+            }
             if s.is_empty() {
-                return tail.map_or(0,|(_, len)| get_encoded_len(len));
+                return tail.map(|(_, len)| get_encoded_len(len));
             }
-            if let Some(&len) = dp.get(&(s.len(), k, tail)) {
-                return len;
+            let cached = dp.get(&DpKey(s.len(), k, tail)).copied();
+            if cached.is_some() {
+                return cached;
             }
-            let new_tail_count = tail.and_then(|(tail_char, tail_count)| (s[0]==tail_char).then_some(tail_count+1)).unwrap_or(1);
-            let d_len = tail.and_then(|(tail_char, tail_count)| (s[0]!=tail_char).then(|| get_encoded_len(tail_count))).unwrap_or(0);
+            let (tail_len, d_len) = tail.map_or((1, 0), |(tail_char, tail_len)| if s[0]==tail_char { (tail_len+1, 0) } else { (1, get_encoded_len(tail_len)) });
             let len = [
-                (k>0).then(|| get_compressed_len(dp, &s[1..], k-1, tail)),
-                Some(get_compressed_len(dp, &s[1..], k, Some((s[0], new_tail_count))) + d_len)
+                get_compressed_len(dp, &s[1..], k-1, tail),
+                get_compressed_len(dp, &s[1..], k, Some((s[0], tail_len))).map(|len| len + d_len)
             ];
             let len = len.into_iter().flatten().min().unwrap();
-            dp.insert((s.len(), k, tail), len);
-            len
+            dp.insert(DpKey(s.len(), k, tail), len);
+            Some(len)
         }
-        get_compressed_len(&mut HashMap::new(), s.as_bytes(), k, None)
+        get_compressed_len(&mut HashMap::new(), s.as_bytes(), k, None).unwrap()
     }
 }
 
