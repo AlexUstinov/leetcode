@@ -37,7 +37,7 @@ struct ZigZagIterator<'a> {
     next_el: Option<u8>,
 }
 
-impl<'a> Iterator for ZigZagIterator<'a> {
+impl Iterator for ZigZagIterator<'_> {
     type Item = u8;
     fn next(&mut self) -> Option<u8> {
         match self.next_el {

@@ -12,7 +12,7 @@ impl Solution {
                     None => { g.insert(edge[0], vec![edge[1]]); g }
                 }
             });
-        if source != destination && g.get(&source).is_none() {
+        if source != destination && !g.contains_key(&source) {
             return false;
         }
         let size = n as usize;

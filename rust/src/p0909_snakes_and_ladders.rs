@@ -11,7 +11,7 @@ impl Solution {
                 _ => n - 1 - (cell_idx - 1) % n,
             };
             match board[row_idx][cell_idx] {
-                cell_val if cell_val==-1 => None,
+                -1 => None,
                 cell_val => Some(cell_val as usize),
             }
         }

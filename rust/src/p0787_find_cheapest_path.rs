@@ -32,7 +32,7 @@ impl Solution1 {
                         queue.extend(g[node].iter()
                             .filter(|el| {
                                 let next = el[0] as usize;
-                                next != parent && travel_cost[next].map_or(true, |prev_cost| prev_cost >= cost + el[1])
+                                next != parent && travel_cost[next].is_none_or(|prev_cost| prev_cost >= cost + el[1])
                             })
                             .map(|el| Action::Explore(el[0] as usize, node, cost + el[1])));
                     }
@@ -92,7 +92,7 @@ impl Solution3 {
             if route.dst == dst {
                 return route.cost;
             }
-            if stops[route.dst].map_or(false, |curr_stops| curr_stops <= route.stops) {
+            if stops[route.dst].is_some_and(|curr_stops| curr_stops <= route.stops) {
                 continue;
             }
             stops[route.dst] = Some(route.stops);

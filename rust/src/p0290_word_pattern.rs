@@ -13,7 +13,7 @@ impl Solution {
             match lkp.get(&c) {
                 Some(prev_word) if prev_word!=&word => { return false; },
                 None => {
-                    if words.get(word).is_some() {
+                    if words.contains(word) {
                         return false;
                     }
                     lkp.insert(c, word);

@@ -16,7 +16,7 @@ impl Solution {
             let mut used_words = std::collections::HashMap::new();
             while match_cnt < w_cnt && s.len() >= w_len && {
                 let w = &s[0..w_len];
-                words.get(w).map_or(false, |cnt| cnt > used_words.get(w).unwrap_or(&0))
+                words.get(w).is_some_and(|cnt| cnt > used_words.get(w).unwrap_or(&0))
             } {
                 *used_words.entry(&s[0..w_len]).or_insert(0) += 1;
                 s = &s[w_len..];

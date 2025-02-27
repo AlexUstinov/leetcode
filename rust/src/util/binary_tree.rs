@@ -21,7 +21,7 @@ impl TreeNode {
         Self::from_vec(&super::parse_opt_values(values))
     }
 
-    pub fn from_vec(values: &Vec<Option<i32>>) -> Option<Rc<RefCell<TreeNode>>> {
+    pub fn from_vec(values: &[Option<i32>]) -> Option<Rc<RefCell<TreeNode>>> {
         if values.is_empty() {
             return None;
         }
@@ -81,7 +81,7 @@ impl TreeNode {
     fn iter_bfs(&self) -> impl Iterator<Item=Option<i32>> + '_ {
         fn process_node(node: Option<&TreeNode>, nodes: &mut VecDeque<Option<Rc<RefCell<TreeNode>>>>, val_count: &mut i32) -> Option<i32> {
             if let Some(node) = node {
-                nodes.extend([node.left.clone(), node.right.clone()].into_iter());
+                nodes.extend([node.left.clone(), node.right.clone()]);
                 *val_count += node.left.as_ref().map_or(0, |_| 1) + node.right.as_ref().map_or(0, |_| 1) - 1                    
             }
             node.map(|node| node.val)

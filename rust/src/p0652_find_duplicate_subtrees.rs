@@ -20,7 +20,7 @@ impl Solution {
         while let Some(action) = stack.pop() {
             match action {
                 Action::Explore(node_id, opt_node) => {
-                    if let &Some(ref node) = &opt_node {
+                    if let Some(node) = &opt_node {
                         let &TreeNode { val, ref left, ref right } = &*node.borrow();
                         let (left_id, right_id) = (id_gen(), id_gen());
                         stack.extend([
@@ -37,7 +37,7 @@ impl Solution {
                     // define structure of the current node
                     let node_struct = (l_struct_id, val, r_struct_id);
                     // lookup for the structure id or create a new one
-                    let node_struct_id = *structure_id_map.entry(node_struct).or_insert_with(|| id_gen());
+                    let node_struct_id = *structure_id_map.entry(node_struct).or_insert_with(id_gen);
                     // communicate structure id to the parent node
                     child_struct_ids.insert(node_id, node_struct_id);
                     // count how many times current structure has appeared

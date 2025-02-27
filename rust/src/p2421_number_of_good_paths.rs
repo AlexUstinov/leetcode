@@ -4,7 +4,7 @@ enum Action { Explore(usize, usize), Restore(usize, usize) }
 impl Solution {
     pub fn number_of_good_paths(vals: Vec<i32>, edges: Vec<Vec<i32>>) -> i32 {
         use std::collections::HashMap;
-        let n = vals.len() as usize;
+        let n = vals.len();
         let g = edges.iter().fold(vec![vec![]; n], |mut g, e| { let (a, b) = (e[0] as usize, e[1] as usize); g[a].push(b); g[b].push(a); g });
         let mut stack = vec![Action::Explore(0, 0)];
         let (mut down_path_counts, mut path_count) = (vec![Vec::<HashMap<i32, i32>>::new(); n], 0);
@@ -26,8 +26,7 @@ impl Solution {
                         if let Some(count) = a.get(&node_val) {
                             path_count += count;
                         }
-                        for j in (i+1)..path_counts.len() {
-                            let b = &path_counts[j];
+                        for b in path_counts[i+1..].iter() {
                             for (key, a_cnt) in a.iter() {
                                 if let Some(b_cnt) = b.get(key) {
                                     path_count += a_cnt * b_cnt;

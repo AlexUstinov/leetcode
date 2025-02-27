@@ -20,8 +20,7 @@ impl Solution {
             for house_color in house_colors {
                 let paint_costs = &mut dp_next[house_color];
                 let house_cost = if can_paint { cost[i][house_color] } else { 0 };
-                for prev_house_color in 0..n {
-                    let prev_paint_costs = &dp[prev_house_color];
+                for (prev_house_color, prev_paint_costs) in dp.iter().enumerate() {
                     for num_neighborhoods in 0..=(t.min(i)) {
                         if let Some(prev_cost) = prev_paint_costs[num_neighborhoods] {
                             if house_color==prev_house_color {

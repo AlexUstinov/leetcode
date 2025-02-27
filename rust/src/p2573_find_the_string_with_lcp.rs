@@ -10,9 +10,9 @@ impl Solution {
                 if c > b'z' {
                     return String::from("");
                 }
-                for j in i..n {
-                    if lcp[i][j] > 0 && bytes[j]==0 {
-                        bytes[j] = c;
+                for (j, byte) in bytes[i..].iter_mut().enumerate() {
+                    if lcp[i][i+j] > 0 && *byte == 0 {
+                        *byte = c;
                     }
                 }
                 c += 1;
