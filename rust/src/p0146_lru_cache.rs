@@ -1,7 +1,7 @@
 use std::rc::Rc;
 use std::cell::RefCell;
 use std::collections::HashMap;
-struct ListNode {
+pub struct ListNode {
     key: i32,
     val: i32,
     prev: Option<Rc<RefCell<ListNode>>>,
@@ -9,7 +9,7 @@ struct ListNode {
 }
 
 impl ListNode {
-    fn new(key: i32, val: i32) -> Self {
+    pub fn new(key: i32, val: i32) -> Self {
         Self { key, val, prev: None, next: None }
     }
 }
@@ -28,7 +28,7 @@ pub struct LRUCache {
  */
 impl LRUCache {
 
-    fn new(capacity: i32) -> Self {
+    pub fn new(capacity: i32) -> Self {
         Self {
             capacity: capacity as usize,
             head: None,
@@ -37,7 +37,7 @@ impl LRUCache {
         }
     }
     
-    fn get(&mut self, key: i32) -> i32 {
+    pub fn get(&mut self, key: i32) -> i32 {
         if let Some(node) = self.map.get_mut(&key) {
             let ListNode { val, prev, next, .. } = &mut *node.borrow_mut();
             let mut insert_as_head = false;
@@ -68,7 +68,7 @@ impl LRUCache {
         -1
     }
     
-    fn put(&mut self, key: i32, value: i32) {
+    pub fn put(&mut self, key: i32, value: i32) {
         if self.get(key) >= 0 {
             if let Some(node) = self.map.get_mut(&key) {
                 let ListNode { val, .. } = &mut *node.borrow_mut();
