@@ -3,7 +3,7 @@ pub struct Solution;
 impl Solution {
     pub fn min_cost(houses: Vec<i32>, cost: Vec<Vec<i32>>, m: i32, n: i32, target: i32) -> i32 {
         let t = target as usize;
-        let (m, n) = (m as usize, n as usize);
+        let (_m, n) = (m as usize, n as usize);
         let mut dp = vec![vec![None; t+1]; n];
         let mut dp_next = dp.clone();
         for (color, dp_row) in dp.iter_mut().enumerate() {

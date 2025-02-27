@@ -33,6 +33,7 @@ pub mod p0739_daily_temperatures;
 pub mod p0787_find_cheapest_path;
 pub mod p0790_domino_and_tromino_tiling;
 pub mod p0872_leaf_similar_trees;
+pub mod p0873_length_of_longest_fibonacci_subsequence;
 pub mod p0876_middle_of_the_linked_list;
 pub mod p0909_snakes_and_ladders;
 pub mod p0912_sort_an_array;
