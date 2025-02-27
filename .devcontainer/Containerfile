@@ -16,6 +16,8 @@ RUN apt-get update \
         curl \
         git \
         wget \
+        # Rust dependencies
+        build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 # Dotnet Environment variables
@@ -33,7 +35,7 @@ ENV \
     # Enable correct mode for dotnet watch (only mode supported in a container)
     DOTNET_USE_POLLING_FILE_WATCHER=true \
     # Skip extraction of XML docs - generally not useful within an image/container - helps performance
-    NUGET_XMLDOC_MODE=skip    
+    NUGET_XMLDOC_MODE=skip
 
 ARG TARGET_JAVA_VERSION=17
 ARG JAVA_HOME=/usr/lib/jvm/msopenjdk-${TARGET_JAVA_VERSION}
@@ -46,6 +48,11 @@ ENV \
     SDKMAN_DIR="/usr/local/sdkman" \
     PATH="${JAVA_HOME}/bin:${SDKMAN_DIR}/candidates/java/current/bin:${SDKMAN_DIR}/candidates/maven/current/bin:${PATH}"
 
+# Rust Environment variables
+ENV RUSTUP_HOME=/usr/local/rustup \
+    CARGO_HOME=/usr/local/cargo \
+    PATH=/usr/local/cargo/bin:$PATH \
+    RUST_VERSION=1.85.0
 
 RUN \
     # Install .NET Runtime
@@ -108,13 +115,36 @@ ARG UPGRADE_PACKAGES="true"
 ARG USERNAME=vscode
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
-RUN bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" "true" "true" \
-    && bash /tmp/library-scripts/java-debian.sh "none" "${SDKMAN_DIR}" "${USERNAME}" "true" \
-    && bash /tmp/library-scripts/maven-debian.sh "latest" "${SDKMAN_DIR}" ${USERNAME} "true" \
+
+RUN bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" "true" "true"; \
+    bash /tmp/library-scripts/java-debian.sh "none" "${SDKMAN_DIR}" "${USERNAME}" "true"; \
+    bash /tmp/library-scripts/maven-debian.sh "latest" "${SDKMAN_DIR}" ${USERNAME} "true"; \
     # Install Rust
-    && export DEBIAN_FRONTEND=noninteractive \
+    export DEBIAN_FRONTEND=noninteractive; \
     # Remove imagemagick due to https://security-tracker.debian.org/tracker/CVE-2019-10131
-    && apt-get purge -y imagemagick imagemagick-6-common \
-    && bash /tmp/library-scripts/rust-debian.sh "${CARGO_HOME}" "${RUSTUP_HOME}" "${USERNAME}" "true" "true" \
-    && apt-get clean -y \
-    && rm -rf /var/lib/apt/lists/* /tmp/library-scripts
+    apt-get purge -y imagemagick imagemagick-6-common; \
+    # Install Rust
+    set -eux; \
+    dpkgArch="$(dpkg --print-architecture)"; \
+    case "${dpkgArch##*-}" in \
+        amd64) rustArch='x86_64-unknown-linux-gnu'; rustupSha256='6aeece6993e902708983b209d04c0d1dbb14ebb405ddb87def578d41f920f56d' ;; \
+        armhf) rustArch='armv7-unknown-linux-gnueabihf'; rustupSha256='3c4114923305f1cd3b96ce3454e9e549ad4aa7c07c03aec73d1a785e98388bed' ;; \
+        arm64) rustArch='aarch64-unknown-linux-gnu'; rustupSha256='1cffbf51e63e634c746f741de50649bbbcbd9dbe1de363c9ecef64e278dba2b2' ;; \
+        i386) rustArch='i686-unknown-linux-gnu'; rustupSha256='0a6bed6e9f21192a51f83977716466895706059afb880500ff1d0e751ada5237' ;; \
+        *) echo >&2 "unsupported architecture: ${dpkgArch}"; exit 1 ;; \
+    esac; \
+    url="https://static.rust-lang.org/rustup/archive/1.27.1/${rustArch}/rustup-init"; \
+    wget "$url"; \
+    echo "${rustupSha256} *rustup-init" | sha256sum -c -; \
+    chmod +x rustup-init; \
+    ./rustup-init -y --no-modify-path --profile minimal --default-toolchain $RUST_VERSION --default-host ${rustArch}; \
+    rm rustup-init; \
+    chmod -R a+w $RUSTUP_HOME $CARGO_HOME; \
+    rustup --version; \
+    cargo --version; \
+    rustc --version; \
+    rustup component add rls rust-analysis rust-src rustfmt clippy 2>&1 \
+    # End Rust installation
+
+    apt-get clean -y; \
+    rm -rf /var/lib/apt/lists/* /tmp/library-scripts;
