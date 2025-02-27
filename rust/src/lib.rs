@@ -47,6 +47,7 @@ pub mod p1155_number_of_dice_rolls;
 pub mod p1162_as_far_from_land_as_possible;
 pub mod p1167_minimum_cost_to_connect_sticks;
 pub mod p1203_sort_items_by_groups_respecting_dependencies;
+pub mod p1335_minimum_difficulty_of_a_job_schedule;
 pub mod p1339_maximum_product_of_splitted_binary_tree;
 pub mod p1458_max_dot_product;
 pub mod p1473_paint_house_iii;
@@ -63,5 +64,6 @@ pub mod p2444_count_subarrays_with_fixed_bounds;
 pub mod p2565_subsequence_with_the_minimum_score;
 pub mod p2573_find_the_string_with_lcp;
 pub mod p2580_count_ways_to_group_overlapping_ranges;
+pub mod p2698_find_punishment_number;
 
 pub mod comp_problem;
