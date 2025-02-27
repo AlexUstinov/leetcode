@@ -28,7 +28,7 @@ impl Solution {
             let mut depth = 0;
             let mut next = root.clone();
             while let Some(node) = next {
-                let TreeNode { ref left, .. } = &*node.borrow();
+                let TreeNode { left, .. } = &*node.borrow();
                 next = left.clone();
                 depth += 1;
             }
@@ -38,7 +38,7 @@ impl Solution {
         let mut is_lvl_tail = false;
         while let Some((node, depth)) = stack.pop() {
             if let Some(node) = node.as_ref() {
-                let TreeNode { ref left, ref right, .. } = &*node.borrow();
+                let TreeNode { left, right, .. } = &*node.borrow();
                 if depth == max_depth {
                     if left.is_some() || right.is_some() {
                         return false;

@@ -34,7 +34,7 @@ impl Solution {
         let mut is_forward = true;
         while let Some(node) = if is_forward { queue.pop_front() } else { queue.pop_back() } {
             if let Some(node) = node {
-                let TreeNode { val, ref left, ref right } = &*node.borrow();
+                let TreeNode { val, left, right } = &*node.borrow();
                 level.push(*val);
                 if is_forward {
                     for node in [left, right].into_iter().filter(|node| node.is_some()) {

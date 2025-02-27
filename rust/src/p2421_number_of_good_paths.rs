@@ -34,7 +34,7 @@ impl Solution {
                                 }
                             }
                         }
-                        for (&val, &a_cnt) in a.iter().filter(|(&val, _)| val >= parent_val) {
+                        for (&val, &a_cnt) in a.iter().filter(|&(&val, _)| val >= parent_val) {
                             if let Some(cnt) = unique_ends.get_mut(&val) {
                                 *cnt += a_cnt;
                             }

@@ -39,27 +39,27 @@ impl LRUCache {
     
     fn get(&mut self, key: i32) -> i32 {
         if let Some(node) = self.map.get_mut(&key) {
-            let ListNode { val, ref mut prev, ref mut next, .. } = &mut *node.borrow_mut();
+            let ListNode { val, prev, next, .. } = &mut *node.borrow_mut();
             let mut insert_as_head = false;
             if let Some(prev_node) = prev {
-                let ListNode { next: ref mut prev_next, .. } = &mut *prev_node.borrow_mut();
+                let ListNode { next: prev_next, .. } = &mut *prev_node.borrow_mut();
                 if let Some(next_node) = next.as_ref() {
-                    let ListNode { prev: ref mut next_prev, ..} = &mut *next_node.borrow_mut();
-                    prev_next.insert(Rc::clone(next_node));
-                    next_prev.insert(Rc::clone(prev_node));
+                    let ListNode { prev: next_prev, ..} = &mut *next_node.borrow_mut();
+                    _ = prev_next.insert(Rc::clone(next_node));
+                    _ = next_prev.insert(Rc::clone(prev_node));
                 } else {
                     *prev_next = None;
-                    self.tail.insert(Rc::clone(prev_node));
+                    _ = self.tail.insert(Rc::clone(prev_node));
                 }
                 insert_as_head = true;
             }
             if insert_as_head {
                 if let Some(head_node) = self.head.as_ref() {
-                    let ListNode { prev: ref mut head_prev, .. } = &mut *head_node.borrow_mut();
-                    head_prev.insert(Rc::clone(node));
+                    let ListNode { prev: head_prev, .. } = &mut *head_node.borrow_mut();
+                    _ = head_prev.insert(Rc::clone(node));
                 }
                 *next = self.head.take();
-                self.head.insert(Rc::clone(node));
+                _ = self.head.insert(Rc::clone(node));
                 *prev = None;
             }
 
@@ -78,10 +78,10 @@ impl LRUCache {
         else {
             let node = Rc::new(RefCell::new(ListNode::new(key, value)));
             if let Some(head) = self.head.as_ref() {
-                let ListNode { prev: ref mut head_prev, .. } = &mut *head.borrow_mut();
-                head_prev.insert(Rc::clone(&node));
-                let ListNode { next: ref mut node_next, .. } = &mut *node.borrow_mut();
-                node_next.insert(Rc::clone(head));
+                let ListNode { prev: head_prev, .. } = &mut *head.borrow_mut();
+                _ = head_prev.insert(Rc::clone(&node));
+                let ListNode { next: node_next, .. } = &mut *node.borrow_mut();
+                _ = node_next.insert(Rc::clone(head));
             }
             if self.tail.is_none() {
                 self.tail = Some(Rc::clone(&node));
@@ -91,11 +91,11 @@ impl LRUCache {
 
             if self.map.len() > self.capacity {
                 if let Some(tail) = self.tail.take() {
-                    let ListNode { key: tail_key, prev: ref mut tail_prev, .. } = &mut *tail.borrow_mut();
+                    let ListNode { key: tail_key, prev: tail_prev, .. } = &mut *tail.borrow_mut();
                     if let Some(new_tail) = tail_prev {
-                        let ListNode { next: ref mut new_tail_next, .. }  = &mut *new_tail.borrow_mut();
+                        let ListNode { next: new_tail_next, .. }  = &mut *new_tail.borrow_mut();
                         *new_tail_next = None;
-                        self.tail.insert(Rc::clone(new_tail));
+                        _ = self.tail.insert(Rc::clone(new_tail));
                     }
                     else {
                         self.head = None;
